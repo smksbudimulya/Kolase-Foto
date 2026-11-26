@@ -43,8 +43,6 @@ Cukup buka `index.html` di browser modern:
 
 ---
 
-
-
 ## 📁 Struktur File
 
 ```
