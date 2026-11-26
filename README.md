@@ -43,42 +43,7 @@ Cukup buka `index.html` di browser modern:
 
 ---
 
-## ☁️ Deploy ke GitHub Pages (Hosting Gratis)
 
-### Langkah 1 — Buat Repository
-1. Login ke [github.com](https://github.com)
-2. Klik **New repository**
-3. Nama repo: `smks-budi-mulya-kolase`
-4. Set **Public**, centang **"Add a README file"** → klik **Create**
-
-### Langkah 2 — Upload Semua File
-1. Buka repository yang baru dibuat
-2. Klik **Add file → Upload files**
-3. Drag & drop **semua file** dalam folder ini:
-   ```
-   index.html
-   manifest.json
-   sw.js
-   icon-192.png
-   icon-512.png
-   README.md
-   .gitignore
-   ```
-4. Klik **Commit changes**
-
-### Langkah 3 — Aktifkan GitHub Pages
-1. Masuk ke **Settings** repository
-2. Klik **Pages** di menu kiri
-3. Pada **Branch**: pilih `main` → folder `/ (root)` → klik **Save**
-4. Tunggu 1–2 menit
-
-### ✅ Hasil
-Aplikasi akan aktif di:
-```
-https://<username>.github.io/smks-budi-mulya-kolase/
-```
-
----
 
 ## 📁 Struktur File
 
