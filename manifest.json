@@ -1,0 +1,26 @@
+{
+  "name": "Kolase SMKS Budi Mulya",
+  "short_name": "Kolase SMKS",
+  "description": "Aplikasi pembuat kolase foto dan video carousel untuk SMKS Budi Mulya Kasiman — dokumentasi kegiatan, kelulusan, PPDB, dan acara resmi sekolah.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#001833",
+  "theme_color": "#003366",
+  "lang": "id",
+  "categories": ["education", "photo"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
