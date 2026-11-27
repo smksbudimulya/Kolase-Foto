@@ -136,6 +136,61 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border-color: var(--ac) !important;
             color: var(--ac) !important;
         }
+/* Visual Dual-Range Video Trim Timeline */
+        .trim-track {
+            position: relative;
+            width: 170px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+        }
+        @media (min-width: 640px) {
+            .trim-track { width: 220px; }
+        }
+        .trim-rail {
+            position: absolute;
+            left: 0; right: 0;
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.16);
+        }
+        .trim-fill {
+            position: absolute;
+            height: 6px;
+            border-radius: 999px;
+            background: #c9b27c;
+            pointer-events: none;
+        }
+        .trim-range {
+            position: absolute;
+            left: 0; top: 0;
+            width: 100%; height: 22px;
+            margin: 0;
+            background: transparent;
+            pointer-events: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .trim-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            pointer-events: auto;
+            width: 16px; height: 16px;
+            border-radius: 999px;
+            background: #c9b27c;
+            border: 2px solid #101612;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            cursor: ew-resize;
+        }
+        .trim-range::-moz-range-thumb {
+            pointer-events: auto;
+            width: 16px; height: 16px;
+            border-radius: 999px;
+            background: #c9b27c;
+            border: 2px solid #101612;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            cursor: ew-resize;
+        }
         /* Efek transisi halus pada slot foto */
         .photo-slot {
             transition: box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s ease;
@@ -1240,11 +1295,14 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         <label class="flex items-center gap-1">Saturasi
                             <input type="range" id="slot-sat-slider" min="0" max="2" step="0.05" value="1" class="w-16 cursor-pointer">
                         </label>
-                        <div id="slot-trim-wrap" class="hidden flex items-center gap-1.5 pl-1 border-l border-white/15">
-                            <span>Trim (dtk):</span>
-                            <input type="number" id="slot-trim-start" min="0" step="0.5" value="0" class="w-12 px-1.5 py-0.5 rounded text-[11px]" title="Mulai video (detik)">
-                            <span>–</span>
-                            <input type="number" id="slot-trim-end" min="0.5" step="0.5" value="5" class="w-12 px-1.5 py-0.5 rounded text-[11px]" title="Selesai video (detik)">
+                        <div id="slot-trim-wrap" class="hidden flex items-center gap-2 pl-2 border-l border-white/15">
+                            <span id="slot-trim-label" class="text-[10px] font-semibold whitespace-nowrap">✂️ 0.0s–5.0s</span>
+                            <div class="trim-track">
+                                <div class="trim-rail"></div>
+                                <div id="slot-trim-fill" class="trim-fill" style="left:0%;width:100%;"></div>
+                                <input type="range" id="slot-trim-start" class="trim-range" min="0" max="10" step="0.1" value="0" title="Geser titik mulai video">
+                                <input type="range" id="slot-trim-end" class="trim-range" min="0" max="10" step="0.1" value="5" title="Geser titik selesai video">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3475,8 +3533,14 @@ const WM_PRESETS = { dark: null, light: null };
             const trimWrap = document.getElementById('slot-trim-wrap');
             if (photo.type === 'video') {
                 trimWrap.classList.remove('hidden');
-                document.getElementById('slot-trim-start').value = photo.trimStart || 0;
-                document.getElementById('slot-trim-end').value = photo.trimEnd || Math.round((photo.duration || 5) * 10) / 10;
+                const dur = Math.max(0.5, Math.round((photo.duration || 5) * 10) / 10);
+                const sEl = document.getElementById('slot-trim-start');
+                const eEl = document.getElementById('slot-trim-end');
+                const ts = Math.min(dur - 0.3, photo.trimStart || 0);
+                const te = Math.min(dur, Math.max(ts + 0.3, photo.trimEnd || dur));
+                sEl.max = dur; eEl.max = dur;
+                sEl.value = ts; eEl.value = te;
+                if (typeof updateTrimVisual === 'function') updateTrimVisual(ts, te, dur);
             } else {
                 trimWrap.classList.add('hidden');
             }
@@ -4399,8 +4463,38 @@ const WM_PRESETS = { dark: null, light: null };
             if (sExp) sExp.addEventListener('input', e => updateActiveSlotMedia(p => p.exposure = parseFloat(e.target.value) || 1));
             if (sCon) sCon.addEventListener('input', e => updateActiveSlotMedia(p => p.contrast = parseFloat(e.target.value) || 1));
             if (sSat) sSat.addEventListener('input', e => updateActiveSlotMedia(p => p.saturation = parseFloat(e.target.value) || 1));
-            if (sTrimS) sTrimS.addEventListener('change', e => updateActiveSlotMedia(p => p.trimStart = Math.max(0, parseFloat(e.target.value) || 0)));
-            if (sTrimE) sTrimE.addEventListener('change', e => updateActiveSlotMedia(p => p.trimEnd = Math.max(0.5, parseFloat(e.target.value) || 5)));
+            window.updateTrimVisual = function(ts, te, dur) {
+                const fill = document.getElementById('slot-trim-fill');
+                const lbl = document.getElementById('slot-trim-label');
+                const d = Math.max(0.5, dur || 5);
+                if (fill) {
+                    fill.style.left = (ts / d * 100) + '%';
+                    fill.style.width = Math.max(2, (te - ts) / d * 100) + '%';
+                }
+                if (lbl) lbl.textContent = `✂️ ${ts.toFixed(1)}s–${te.toFixed(1)}s`;
+            };
+
+            function handleTrimSlide(isStart) {
+                const slide = getCurrentSlide();
+                const p = slide.photos[state.activeSlotIndex];
+                if (!p || p.type !== 'video') return;
+                const dur = Math.max(0.5, Math.round((p.duration || 5) * 10) / 10);
+                let ts = parseFloat(sTrimS.value) || 0;
+                let te = parseFloat(sTrimE.value) || dur;
+                if (ts > te - 0.3) {
+                    if (isStart) { ts = Math.max(0, te - 0.3); sTrimS.value = ts; }
+                    else { te = Math.min(dur, ts + 0.3); sTrimE.value = te; }
+                }
+                p.trimStart = ts;
+                p.trimEnd = te;
+                syncGroupPhoto(slide.layout.slots[state.activeSlotIndex]?.syncGroup, p);
+                window.updateTrimVisual(ts, te, dur);
+                const slotDom = boardEl.querySelectorAll('.photo-slot')[state.activeSlotIndex];
+                const vidDom = slotDom && slotDom.querySelector('video');
+                if (vidDom) vidDom.currentTime = isStart ? ts : Math.max(ts, te - 0.1);
+            }
+            if (sTrimS) sTrimS.addEventListener('input', () => handleTrimSlide(true));
+            if (sTrimE) sTrimE.addEventListener('input', () => handleTrimSlide(false));
 
             // 3. Teks Bold, Italic, Underline & Color Picker Bebas
             const styleBtns = document.getElementById('doodle-text-style-btns');
