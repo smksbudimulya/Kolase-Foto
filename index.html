@@ -12,7 +12,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Pacifico&family=Patrick+Hand&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Pacifico&family=Patrick+Hand&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:ital,wght@0,500;0,700;1,500;1,700&display=swap" rel="stylesheet">
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -222,6 +222,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .font-hand-marker { font-family: 'Permanent Marker', cursive; }
         .font-hand-bubble { font-family: 'Fredoka', sans-serif; }
     .font-hand-note { font-family: 'Caveat', cursive; }
+        .font-sans-poppins { font-family: 'Poppins', sans-serif; }
+        .font-serif-playfair { font-family: 'Playfair Display', serif; }
+        .font-sans-inter { font-family: 'Inter', sans-serif; }
         /* Full-screen viewport presisi di HP (Potret) & Laptop/Desktop */
         html, body {
             height: 100dvh;
@@ -1013,6 +1016,35 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                             <input type="range" id="input-bg-dim" min="0" max="0.75" step="0.05" value="0" class="w-full cursor-pointer">
                         </div>
                     </div>
+
+                    <!-- Musik Latar (Backsound) & Durasi Video Story -->
+                    <div class="pt-3 border-t border-white/10 space-y-2.5">
+                        <span class="block text-xs text-slate-300 font-medium">Musik Latar (Backsound) &amp; Durasi Story</span>
+                        <input type="file" id="bgm-file-input" accept="audio/*" class="hidden">
+                        <div class="grid grid-cols-3 gap-1.5">
+                            <button id="btn-bgm-pick" class="px-2 py-2 rounded-xl text-[11px] font-semibold border transition">🎵 Pilih Lagu</button>
+                            <button id="btn-bgm-play" class="px-2 py-2 rounded-xl text-[11px] font-medium border transition">▶ Putar</button>
+                            <button id="btn-bgm-clear" class="px-2 py-2 rounded-xl text-[11px] font-medium border transition">Hapus</button>
+                        </div>
+                        <p id="bgm-name" class="text-[11px] text-slate-400 truncate">Belum ada backsound dipilih.</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[10px] text-slate-400 mb-1">Mulai Lagu (dtk)</label>
+                                <input type="number" id="input-bgm-start" min="0" step="0.5" value="0" class="w-full px-2.5 py-1.5 rounded-xl text-xs border">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-slate-400 mb-1">Durasi Story (0=Auto)</label>
+                                <input type="number" id="input-story-dur" min="0" max="120" step="1" value="0" class="w-full px-2.5 py-1.5 rounded-xl text-xs border">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-slate-400">Volume Musik</span>
+                                <span id="val-bgm-vol" class="font-semibold">80%</span>
+                            </div>
+                            <input type="range" id="input-bgm-vol" min="0" max="1" step="0.05" value="0.8" class="w-full cursor-pointer">
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -1073,18 +1105,27 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 <div id="doodle-toolbar" class="hidden absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 max-w-[96%] bg-slate-900/95 backdrop-blur-xl border border-amber-400/40 rounded-2xl px-3 py-1.5 sm:py-2 shadow-2xl flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 z-30 animate-toast">
                     <input type="text" id="doodle-text-edit" placeholder="Ketik teks..." class="hidden bg-slate-800 text-white text-xs rounded-xl px-2.5 py-1 border border-white/15 w-28 sm:w-36 focus:outline-none focus:border-amber-400">
                     <select id="doodle-font-edit" class="hidden bg-slate-800 text-white text-xs rounded-xl px-2 py-1 border border-white/15 focus:outline-none focus:border-amber-400">
+                        <option value="Poppins">Poppins (Formal/Sekolah)</option>
+                        <option value="Inter">Inter (Modern)</option>
+                        <option value="Playfair Display">Playfair (Elegan)</option>
                         <option value="Patrick Hand">Tulisan Kapur</option>
                         <option value="Pacifico">Kaligrafi Brush</option>
                         <option value="Fredoka">Tebal Bulat (Bubble)</option>
                         <option value="Permanent Marker">Spidol Tebal</option>
                         <option value="Caveat">Catatan Santai</option>
                     </select>
+                    <div class="hidden flex items-center gap-1" id="doodle-text-style-btns">
+                        <button id="doodle-bold-toggle" title="Tebal (Bold)" class="px-2 py-1 rounded-lg text-xs font-bold border">B</button>
+                        <button id="doodle-italic-toggle" title="Miring (Italic)" class="px-2 py-1 rounded-lg text-xs italic border">I</button>
+                        <button id="doodle-underline-toggle" title="Garis Bawah" class="px-2 py-1 rounded-lg text-xs underline border">U</button>
+                    </div>
                     <div class="flex items-center gap-1" id="doodle-quick-colors">
-                        <button data-dcolor="#ffffff" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-white" title="Putih Kapur"></button>
-                        <button data-dcolor="#facc15" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-yellow-400" title="Kuning Cerah"></button>
-                        <button data-dcolor="#f472b6" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-pink-400" title="Pink Pastel"></button>
-                        <button data-dcolor="#38bdf8" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-sky-400" title="Biru Langit"></button>
-                        <button data-dcolor="#1e293b" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-slate-800" title="Hitam Tinta"></button>
+                        <button data-dcolor="#ffffff" class="doodle-color-btn w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-white" title="Putih"></button>
+                        <button data-dcolor="#facc15" class="doodle-color-btn w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-yellow-400" title="Kuning"></button>
+                        <button data-dcolor="#f472b6" class="doodle-color-btn w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-pink-400" title="Pink"></button>
+                        <button data-dcolor="#38bdf8" class="doodle-color-btn w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-sky-400" title="Biru"></button>
+                        <button data-dcolor="#1e293b" class="doodle-color-btn w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-slate-800" title="Hitam"></button>
+                        <input type="color" id="doodle-color-picker" value="#ffffff" title="Pilih Warna Teks Bebas" class="w-6 h-6 rounded-full cursor-pointer border border-white/30 bg-transparent p-0">
                     </div>
                     <div class="h-4 w-[1px] bg-white/15 mx-0.5 hidden sm:block"></div>
                     <div class="flex items-center gap-1 bg-white/5 px-2 py-0.5 sm:py-1 rounded-xl border border-white/10" title="Atur Ukuran Stiker/Teks">
@@ -1131,9 +1172,29 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         <option value="bw">Hitam Putih</option>
                         <option value="vintage">Vintage</option>
                     </select>
-                    <button id="slot-remove" title="Hapus Foto dari Kotak Ini" class="p-1 sm:p-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 transition">
+                    <button id="slot-remove" title="Hapus Media dari Kotak Ini" class="p-1 sm:p-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x w-4 h-4"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
                     </button>
+                    <div class="w-full flex flex-wrap items-center justify-center gap-2 pt-1.5 border-t border-white/10 text-[10px]">
+                        <label class="flex items-center gap-1">Zoom/Crop
+                            <input type="range" id="slot-zoom-slider" min="0.5" max="3.5" step="0.05" value="1" class="w-16 cursor-pointer">
+                        </label>
+                        <label class="flex items-center gap-1">Exposure
+                            <input type="range" id="slot-exp-slider" min="0.5" max="1.8" step="0.05" value="1" class="w-16 cursor-pointer">
+                        </label>
+                        <label class="flex items-center gap-1">Kontras
+                            <input type="range" id="slot-con-slider" min="0.5" max="1.8" step="0.05" value="1" class="w-16 cursor-pointer">
+                        </label>
+                        <label class="flex items-center gap-1">Saturasi
+                            <input type="range" id="slot-sat-slider" min="0" max="2" step="0.05" value="1" class="w-16 cursor-pointer">
+                        </label>
+                        <div id="slot-trim-wrap" class="hidden flex items-center gap-1.5 pl-1 border-l border-white/15">
+                            <span>Trim (dtk):</span>
+                            <input type="number" id="slot-trim-start" min="0" step="0.5" value="0" class="w-12 px-1.5 py-0.5 rounded text-[11px]" title="Mulai video (detik)">
+                            <span>–</span>
+                            <input type="number" id="slot-trim-end" min="0.5" step="0.5" value="5" class="w-12 px-1.5 py-0.5 rounded text-[11px]" title="Selesai video (detik)">
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1645,6 +1706,19 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             vintage: 'sepia(0.45) contrast(0.95) brightness(0.95)'
         };
 
+        function buildFilterCss(p) {
+            const base = FILTERS[p.filter || 'none'];
+            const exp = p.exposure != null ? p.exposure : 1;
+            const con = p.contrast != null ? p.contrast : 1;
+            const sat = p.saturation != null ? p.saturation : 1;
+            const parts = [];
+            if (base && base !== 'none') parts.push(base);
+            if (exp !== 1) parts.push(`brightness(${exp})`);
+            if (con !== 1) parts.push(`contrast(${con})`);
+            if (sat !== 1) parts.push(`saturate(${sat})`);
+            return parts.length ? parts.join(' ') : 'none';
+        }
+
         // 24 KOLEKSI STIKER DOODLE ART VEKTOR UNIK (ALA SKETSA TANGAN)
         const DOODLE_STICKERS = [
             {
@@ -1767,7 +1841,11 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             bgColor: '#ffffff',           // Warna solid / fallback border
             bgGradient: null,
             bgImage: null,
-            bgDim: 0,             // Objek gradasi { css, c1, c2, isLight } jika aktif
+            bgDim: 0,
+            bgm: null,
+            bgmStart: 0,
+            bgmVol: 0.8,
+            storyDuration: 0,             // Objek gradasi { css, c1, c2, isLight } jika aktif
             slides: [],                   // Diisi saat initApp
             currentSlideIndex: 0,         // Slide yang sedang aktif diedit
             activeSlotIndex: null,        // Indeks slot yang sedang dipilih user
@@ -2882,9 +2960,19 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         mediaEl.muted = true;
                         mediaEl.loop = true;
                         mediaEl.playsInline = true;
+                        const ts = photo.trimStart || 0;
+                        const te = photo.trimEnd || photo.duration || 5;
+                        mediaEl.addEventListener('loadedmetadata', () => {
+                            if (ts > 0 && ts < mediaEl.duration) mediaEl.currentTime = ts;
+                        });
+                        mediaEl.addEventListener('timeupdate', () => {
+                            if (te > ts && mediaEl.currentTime >= te) {
+                                mediaEl.currentTime = ts;
+                            }
+                        });
                     }
                     mediaEl.className = 'w-full h-full object-cover pointer-events-none select-none';
-                    mediaEl.style.filter = FILTERS[photo.filter || 'none'] || 'none';
+                    mediaEl.style.filter = buildFilterCss(photo);
                     const sc = photo.scale || 1;
                     const ox = photo.offsetX || 0;
                     const oy = photo.offsetY || 0;
@@ -3109,6 +3197,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     dEl.innerHTML = `<svg viewBox="0 0 100 100" style="width:${baseSize}px;height:${baseSize}px;display:block;">${stObj.svg}</svg>`;
                 } else {
                     const fontMap = {
+                        'Poppins': 'font-sans-poppins',
+                        'Inter': 'font-sans-inter',
+                        'Playfair Display': 'font-serif-playfair',
                         'Patrick Hand': 'font-hand-chalk',
                         'Pacifico': 'font-hand-script',
                         'Fredoka': 'font-hand-bubble',
@@ -3117,7 +3208,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     };
                     const fClass = fontMap[item.font] || 'font-hand-chalk';
                     const fontSize = Math.max(16, Math.round(W * 0.068));
-                    dEl.innerHTML = `<div class="${fClass} whitespace-nowrap px-2 py-0.5 leading-tight font-bold" style="font-size:${fontSize}px;text-shadow:0 2px 10px rgba(0,0,0,0.35);">${escapeHtml(item.text || '')}</div>`;
+                    const fw = item.bold === false ? '400' : '700';
+                    const fs = item.italic ? 'italic' : 'normal';
+                    const td = item.underline ? 'underline' : 'none';
+                    dEl.innerHTML = `<div class="${fClass} whitespace-nowrap px-2 py-0.5 leading-tight" style="font-size:${fontSize}px;font-weight:${fw};font-style:${fs};text-decoration:${td};text-shadow:0 2px 10px rgba(0,0,0,0.35);">${escapeHtml(item.text || '')}</div>`;
                 }
 
                 // Gagang Putar & Ubah Ukuran langsung di Kanvas saat Stiker/Teks dipilih
@@ -3254,6 +3348,18 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             slotToolbar.classList.remove('hidden');
             const filterSel = document.getElementById('slot-filter');
             if (filterSel) filterSel.value = photo.filter || 'none';
+            document.getElementById('slot-zoom-slider').value = photo.scale || 1;
+            document.getElementById('slot-exp-slider').value = photo.exposure != null ? photo.exposure : 1;
+            document.getElementById('slot-con-slider').value = photo.contrast != null ? photo.contrast : 1;
+            document.getElementById('slot-sat-slider').value = photo.saturation != null ? photo.saturation : 1;
+            const trimWrap = document.getElementById('slot-trim-wrap');
+            if (photo.type === 'video') {
+                trimWrap.classList.remove('hidden');
+                document.getElementById('slot-trim-start').value = photo.trimStart || 0;
+                document.getElementById('slot-trim-end').value = photo.trimEnd || Math.round((photo.duration || 5) * 10) / 10;
+            } else {
+                trimWrap.classList.add('hidden');
+            }
             renderCollage();
         }
 
@@ -3714,7 +3820,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     ctx.beginPath();
                     ctx.rect(imgX, imgY, imgW, imgH);
                     ctx.clip();
-                    ctx.filter = FILTERS[photo.filter || 'none'] || 'none';
+                    ctx.filter = buildFilterCss(photo);
                     ctx.translate(imgX + imgW / 2 + ox, imgY + imgH / 2 + oy);
                     ctx.scale(pScale, pScale);
                     ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
@@ -3821,7 +3927,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     });
                 } else {
                     const fontSize = Math.round(outW * 0.068);
-                    ctx.font = `700 ${fontSize}px "${item.font || 'Patrick Hand'}", cursive, sans-serif`;
+                    const fw = item.bold === false ? '400' : '700';
+                    const fst = item.italic ? 'italic ' : '';
+                    ctx.font = `${fst}${fw} ${fontSize}px "${item.font || 'Patrick Hand'}", sans-serif`;
                     ctx.fillStyle = item.color || '#ffffff';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
@@ -3829,7 +3937,12 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         ctx.shadowColor = 'rgba(0,0,0,0.35)';
                         ctx.shadowBlur = 12 * scaleFactor;
                     }
-                    ctx.fillText(item.text || '', 0, 0);
+                    const txtVal = item.text || '';
+                    ctx.fillText(txtVal, 0, 0);
+                    if (item.underline && txtVal) {
+                        const tw = ctx.measureText(txtVal).width;
+                        ctx.fillRect(-tw / 2, fontSize * 0.42, tw, Math.max(2, fontSize * 0.07));
+                    }
                 }
                 ctx.restore();
             }
@@ -3854,7 +3967,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 return;
             }
             const videos = slide.photos.filter(p => p && p.type === 'video' && p.videoObj);
-            const maxDur = videos.length ? Math.min(30, Math.max(3, ...videos.map(v => v.duration || 5))) : 5;
+            const autoDur = videos.length
+                ? Math.min(60, Math.max(3, ...videos.map(v => Math.max(1, (v.trimEnd || v.duration || 5) - (v.trimStart || 0)))))
+                : 5;
+            const maxDur = state.storyDuration > 0 ? Math.min(120, Math.max(2, state.storyDuration)) : autoDur;
 
             btn.disabled = true;
             btn.innerHTML = `<span>⏳ Merekam (${Math.round(maxDur)} dtk)...</span>`;
@@ -3865,13 +3981,36 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
             for (const v of videos) {
                 try {
-                    v.videoObj.currentTime = 0;
+                    v.videoObj.currentTime = v.trimStart || 0;
                     await v.videoObj.play();
                 } catch (e) {}
             }
 
             const stream = canvas.captureStream(30);
-            const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+            let audioCtx = null;
+            let recAudioEl = null;
+
+            if (state.bgm && state.bgm.url) {
+                try {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    recAudioEl = new Audio(state.bgm.url);
+                    recAudioEl.crossOrigin = 'anonymous';
+                    recAudioEl.loop = true;
+                    recAudioEl.currentTime = state.bgmStart || 0;
+                    const srcNode = audioCtx.createMediaElementSource(recAudioEl);
+                    const gainNode = audioCtx.createGain();
+                    gainNode.gain.value = state.bgmVol != null ? state.bgmVol : 0.8;
+                    const dest = audioCtx.createMediaStreamDestination();
+                    srcNode.connect(gainNode);
+                    gainNode.connect(dest);
+                    dest.stream.getAudioTracks().forEach(t => stream.addTrack(t));
+                    await recAudioEl.play();
+                } catch (e) {}
+            }
+
+            const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')
+                ? 'video/webm;codecs=vp9,opus'
+                : (MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm');
             const rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 5000000 });
             const chunks = [];
             rec.ondataavailable = e => { if (e.data && e.data.size > 0) chunks.push(e.data); };
@@ -3886,6 +4025,13 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
             async function tick() {
                 if (!active) return;
+                for (const v of videos) {
+                    const ts = v.trimStart || 0;
+                    const te = v.trimEnd || v.duration || 5;
+                    if (te > ts && v.videoObj.currentTime >= te) {
+                        v.videoObj.currentTime = ts;
+                    }
+                }
                 await renderSlideToCanvas(slide, state.currentSlideIndex, canvas);
                 if ((performance.now() - start) / 1000 < maxDur) {
                     requestAnimationFrame(tick);
@@ -3897,6 +4043,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             requestAnimationFrame(tick);
 
             const blob = await done;
+            if (recAudioEl) { try { recAudioEl.pause(); } catch (e) {} }
+            if (audioCtx) { try { audioCtx.close(); } catch (e) {} }
+
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -4029,7 +4178,139 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             }
         })();
 
-if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+// Event Handler Fitur Pro: Backsound, Trim Video, Exposure/Kontras/Saturasi, Zoom Crop, & Teks B/I/U
+        (function setupProFeatures() {
+            // 1. Backsound & Durasi Story
+            let previewAudio = null;
+            const bgmInput = document.getElementById('bgm-file-input');
+            const bgmName = document.getElementById('bgm-name');
+            const btnPick = document.getElementById('btn-bgm-pick');
+            const btnPlay = document.getElementById('btn-bgm-play');
+            const btnClear = document.getElementById('btn-bgm-clear');
+            const inBgmStart = document.getElementById('input-bgm-start');
+            const inBgmVol = document.getElementById('input-bgm-vol');
+            const valBgmVol = document.getElementById('val-bgm-vol');
+            const inStoryDur = document.getElementById('input-story-dur');
+
+            function stopPreviewAudio() {
+                if (previewAudio) {
+                    previewAudio.pause();
+                    previewAudio = null;
+                }
+                if (btnPlay) btnPlay.textContent = '▶ Putar';
+            }
+
+            if (btnPick && bgmInput) {
+                btnPick.addEventListener('click', () => bgmInput.click());
+                bgmInput.addEventListener('change', (e) => {
+                    const f = e.target.files[0];
+                    if (!f) return;
+                    stopPreviewAudio();
+                    if (state.bgm && state.bgm.url) URL.revokeObjectURL(state.bgm.url);
+                    state.bgm = { name: f.name, url: URL.createObjectURL(f) };
+                    if (bgmName) bgmName.textContent = '🎵 ' + f.name;
+                    showToast('Backsound berhasil dimuat!');
+                    bgmInput.value = '';
+                });
+            }
+            if (btnPlay) {
+                btnPlay.addEventListener('click', () => {
+                    if (!state.bgm || !state.bgm.url) {
+                        showToast('Pilih file musik dulu.');
+                        return;
+                    }
+                    if (previewAudio && !previewAudio.paused) {
+                        stopPreviewAudio();
+                        return;
+                    }
+                    previewAudio = new Audio(state.bgm.url);
+                    previewAudio.currentTime = state.bgmStart || 0;
+                    previewAudio.volume = state.bgmVol != null ? state.bgmVol : 0.8;
+                    previewAudio.loop = true;
+                    previewAudio.play().catch(() => {});
+                    btnPlay.textContent = '⏹ Stop';
+                });
+            }
+            if (btnClear) {
+                btnClear.addEventListener('click', () => {
+                    stopPreviewAudio();
+                    if (state.bgm && state.bgm.url) URL.revokeObjectURL(state.bgm.url);
+                    state.bgm = null;
+                    if (bgmName) bgmName.textContent = 'Belum ada backsound dipilih.';
+                    showToast('Backsound dihapus');
+                });
+            }
+            if (inBgmStart) inBgmStart.addEventListener('input', e => state.bgmStart = Math.max(0, parseFloat(e.target.value) || 0));
+            if (inStoryDur) inStoryDur.addEventListener('input', e => state.storyDuration = Math.max(0, parseFloat(e.target.value) || 0));
+            if (inBgmVol) inBgmVol.addEventListener('input', e => {
+                state.bgmVol = parseFloat(e.target.value);
+                if (valBgmVol) valBgmVol.textContent = Math.round(state.bgmVol * 100) + '%';
+                if (previewAudio) previewAudio.volume = state.bgmVol;
+            });
+
+            // 2. Slot Zoom, Exposure, Kontras, Saturasi, & Trim Video
+            function updateActiveSlotMedia(fn) {
+                const slide = getCurrentSlide();
+                const p = slide.photos[state.activeSlotIndex];
+                if (!p) return;
+                fn(p);
+                syncGroupPhoto(slide.layout.slots[state.activeSlotIndex]?.syncGroup, p);
+                renderCollage();
+            }
+            const sZoom = document.getElementById('slot-zoom-slider');
+            const sExp = document.getElementById('slot-exp-slider');
+            const sCon = document.getElementById('slot-con-slider');
+            const sSat = document.getElementById('slot-sat-slider');
+            const sTrimS = document.getElementById('slot-trim-start');
+            const sTrimE = document.getElementById('slot-trim-end');
+
+            if (sZoom) sZoom.addEventListener('input', e => updateActiveSlotMedia(p => p.scale = parseFloat(e.target.value) || 1));
+            if (sExp) sExp.addEventListener('input', e => updateActiveSlotMedia(p => p.exposure = parseFloat(e.target.value) || 1));
+            if (sCon) sCon.addEventListener('input', e => updateActiveSlotMedia(p => p.contrast = parseFloat(e.target.value) || 1));
+            if (sSat) sSat.addEventListener('input', e => updateActiveSlotMedia(p => p.saturation = parseFloat(e.target.value) || 1));
+            if (sTrimS) sTrimS.addEventListener('change', e => updateActiveSlotMedia(p => p.trimStart = Math.max(0, parseFloat(e.target.value) || 0)));
+            if (sTrimE) sTrimE.addEventListener('change', e => updateActiveSlotMedia(p => p.trimEnd = Math.max(0.5, parseFloat(e.target.value) || 5)));
+
+            // 3. Teks Bold, Italic, Underline & Color Picker Bebas
+            const styleBtns = document.getElementById('doodle-text-style-btns');
+            const btnB = document.getElementById('doodle-bold-toggle');
+            const btnI = document.getElementById('doodle-italic-toggle');
+            const btnU = document.getElementById('doodle-underline-toggle');
+            const colPick = document.getElementById('doodle-color-picker');
+
+            function activeDoodle() {
+                const slide = getCurrentSlide();
+                return (slide.doodles || []).find(d => d.id === state.activeDoodleId);
+            }
+            if (btnB) btnB.addEventListener('click', () => {
+                const d = activeDoodle(); if (!d) return;
+                pushHistory(); d.bold = (d.bold === false); renderCollage();
+            });
+            if (btnI) btnI.addEventListener('click', () => {
+                const d = activeDoodle(); if (!d) return;
+                pushHistory(); d.italic = !d.italic; renderCollage();
+            });
+            if (btnU) btnU.addEventListener('click', () => {
+                const d = activeDoodle(); if (!d) return;
+                pushHistory(); d.underline = !d.underline; renderCollage();
+            });
+            if (colPick) colPick.addEventListener('input', (e) => {
+                const d = activeDoodle(); if (!d) return;
+                d.color = e.target.value; renderCollage();
+            });
+
+            // Tampilkan tombol B/I/U saat teks dipilih
+            const origDoodleEdit = document.getElementById('doodle-font-edit');
+            if (origDoodleEdit && styleBtns) {
+                const obs = new MutationObserver(() => {
+                    if (origDoodleEdit.classList.contains('hidden')) styleBtns.classList.add('hidden');
+                    else styleBtns.classList.remove('hidden');
+                });
+                obs.observe(origDoodleEdit, { attributes: true, attributeFilter: ['class'] });
+            }
+        })();
+
+        if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
             navigator.serviceWorker.register('sw.js').catch(() => {});
         }
     </script>
