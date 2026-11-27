@@ -6,7 +6,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kolase SMKS Budi Mulya - Pembuat Kolase &amp; Carousel Foto/Video</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" content="#e8eef7">
     <link rel="icon" href="icon-192.png">
     <link rel="apple-touch-icon" href="icon-192.png">
     <!-- Tailwind CSS CDN -->
@@ -16,37 +16,182 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body {
+                body {
             font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at 15% 15%, #1e1b4b 0%, #0f172a 45%, #090d16 100%);
-            color: #f8fafc;
+            background: linear-gradient(135deg, #e7edf6 0%, #f4f7fc 50%, #e1e8f4 100%);
+            color: #1e293b;
             overflow-x: hidden;
         }
-        /* Custom Scrollbar untuk Panel Pengaturan */
+        /* Custom Scrollbar untuk Panel Pengaturan (Clay Style) */
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 7px;
+            height: 7px;
         }
         ::-webkit-scrollbar-track {
-            background: rgba(30, 41, 59, 0.35);
+            background: #e2e8f0;
             border-radius: 9999px;
         }
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, rgba(139, 92, 246, 0.5), rgba(236, 72, 153, 0.5));
+            background: linear-gradient(180deg, #60a5fa, #3b82f6);
             border-radius: 9999px;
+            border: 1px solid #f8fafc;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, rgba(139, 92, 246, 0.8), rgba(236, 72, 153, 0.8));
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
         }
-        /* Latar area kerja dengan cahaya ambient lembut */
+        /* Latar area kerja dengan pola titik lembut */
         .canvas-workspace-bg {
-            background-color: #0b0f1d;
-            background-image: 
-                radial-gradient(at 20% 25%, rgba(139, 92, 246, 0.14) 0px, transparent 50%),
-                radial-gradient(at 80% 75%, rgba(236, 72, 153, 0.12) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(56, 189, 248, 0.06) 0px, transparent 60%),
-                radial-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 100% 100%, 22px 22px;
+            background-color: #dce4f0;
+            background-image:
+                radial-gradient(at 20% 25%, rgba(59, 130, 246, 0.10) 0px, transparent 50%),
+                radial-gradient(at 80% 75%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
+                radial-gradient(rgba(100, 116, 139, 0.22) 1.2px, transparent 1.2px);
+            background-size: 100% 100%, 100% 100%, 22px 22px;
+        }
+        /* =========================================================
+           TEMA CLAYMORPHISM (CLAY UI) - KHUSUS SMKS BUDI MULYA
+           ========================================================= */
+        header, aside, #export-modal > div {
+            background: #f3f6fc !important;
+            color: #1e293b !important;
+            border-color: rgba(255, 255, 255, 0.9) !important;
+            box-shadow:
+                10px 10px 24px rgba(163, 177, 198, 0.38),
+                -8px -8px 20px rgba(255, 255, 255, 0.92),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.9),
+                inset -2px -2px 6px rgba(163, 177, 198, 0.18) !important;
+        }
+        header {
+            border-radius: 0 0 24px 24px;
+            margin: 0 6px;
+        }
+        @media (min-width: 1024px) {
+            aside {
+                border-radius: 26px 0 0 26px;
+                margin: 8px 0 8px 4px;
+                height: calc(100% - 16px) !important;
+            }
+        }
+        /* Toolbar & Carousel bar menjadi Clay Pill */
+        #slot-toolbar, #doodle-toolbar, #workspace-info-badge,
+        main > div:first-child {
+            background: #f3f6fc !important;
+            color: #1e293b !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+            box-shadow:
+                8px 8px 18px rgba(163, 177, 198, 0.36),
+                -6px -6px 16px rgba(255, 255, 255, 0.92),
+                inset 2px 2px 4px rgba(255, 255, 255, 0.85),
+                inset -2px -2px 4px rgba(163, 177, 198, 0.15) !important;
+        }
+        main > div:first-child {
+            border-radius: 20px;
+            margin: 8px 12px 0;
+            width: calc(100% - 24px) !important;
+        }
+        /* Judul & teks agar kontras di tema terang Clay */
+        header h1 {
+            background: linear-gradient(90deg, #1e3a8a, #2563eb, #d97706) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            color: transparent !important;
+        }
+        header p, aside p, aside label, aside span, #export-modal p, #export-modal span, #export-modal h3, #export-modal div {
+            --tw-text-opacity: 1;
+        }
+        .text-slate-100, .text-slate-200, .text-slate-300 {
+            color: #334155 !important;
+        }
+        .text-slate-400 {
+            color: #64748b !important;
+        }
+        .text-white:not(.bg-gradient-to-r *):not([class*="from-violet"]):not([class*="from-blue"]):not([class*="from-rose"]):not([class*="bg-emerald"]):not([class*="bg-blue"]):not(.clay-active-text) {
+            color: #1e293b !important;
+        }
+        /* Tombol & kartu di panel menjadi Clay Button */
+        aside button:not(.tab-btn):not(.bg-gradient-to-r),
+        header button:not(#btn-download),
+        #slot-toolbar button,
+        #doodle-toolbar button,
+        #carousel-slides-list > div {
+            background: #f8faff !important;
+            color: #1e293b !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+            border-radius: 14px !important;
+            box-shadow:
+                4px 4px 10px rgba(163, 177, 198, 0.32),
+                -4px -4px 10px rgba(255, 255, 255, 0.95),
+                inset 1px 1px 2px rgba(255, 255, 255, 0.9),
+                inset -1px -1px 3px rgba(163, 177, 198, 0.16) !important;
+            transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+        }
+        aside button:not(.tab-btn):not(.bg-gradient-to-r):hover,
+        header button:not(#btn-download):hover {
+            transform: translateY(-1px);
+            box-shadow:
+                6px 6px 14px rgba(163, 177, 198, 0.38),
+                -5px -5px 12px rgba(255, 255, 255, 0.98) !important;
+        }
+        aside button:not(.tab-btn):not(.bg-gradient-to-r):active,
+        header button:not(#btn-download):active {
+            transform: translateY(1px) scale(0.98);
+            box-shadow:
+                inset 3px 3px 6px rgba(163, 177, 198, 0.35),
+                inset -3px -3px 6px rgba(255, 255, 255, 0.9) !important;
+        }
+        /* Tombol Utama / Aktif bergaya Clay Biru Sekolah */
+        #btn-download, .tab-btn.active,
+        .bg-gradient-to-r.from-violet-600 {
+            background: linear-gradient(145deg, #3b82f6, #2563eb) !important;
+            color: #ffffff !important;
+            border: 1.5px solid rgba(191, 219, 254, 0.65) !important;
+            border-radius: 14px !important;
+            box-shadow:
+                5px 5px 12px rgba(37, 99, 235, 0.32),
+                -3px -3px 8px rgba(255, 255, 255, 0.75),
+                inset 2px 2px 4px rgba(255, 255, 255, 0.35),
+                inset -2px -2px 5px rgba(30, 58, 138, 0.35) !important;
+        }
+        #btn-download *, .tab-btn.active *, .bg-gradient-to-r.from-violet-600 * {
+            color: #ffffff !important;
+        }
+        .tab-btn {
+            border-radius: 14px !important;
+            color: #475569 !important;
+        }
+        /* Input, Select, & Box di dalam panel */
+        aside input[type="text"], aside select, aside textarea,
+        #slot-toolbar select, #doodle-toolbar select, #doodle-toolbar input {
+            background: #e9eff8 !important;
+            color: #1e293b !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            border-radius: 12px !important;
+            box-shadow:
+                inset 3px 3px 6px rgba(163, 177, 198, 0.35),
+                inset -3px -3px 6px rgba(255, 255, 255, 0.85) !important;
+        }
+        aside .bg-slate-950\/50, aside .bg-slate-950\/60, aside .bg-slate-950\/70,
+        aside .bg-slate-900, aside .bg-white\/5,
+        #export-modal .bg-slate-950\/60, #export-modal .bg-slate-950\/70, #export-modal .bg-slate-900 {
+            background: #eaf0f8 !important;
+            border-color: rgba(255, 255, 255, 0.85) !important;
+            border-radius: 18px !important;
+            box-shadow:
+                inset 3px 3px 7px rgba(163, 177, 198, 0.28),
+                inset -3px -3px 7px rgba(255, 255, 255, 0.9) !important;
+        }
+        #layout-grid svg {
+            background: #dde5f1 !important;
+            border-radius: 10px !important;
+        }
+        /* Tombol prev/next slide clay */
+        #btn-prev-slide, #btn-next-slide {
+            background: #f3f6fc !important;
+            color: #1e293b !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+            box-shadow:
+                6px 6px 14px rgba(163, 177, 198, 0.4),
+                -5px -5px 14px rgba(255, 255, 255, 0.95) !important;
         }
         /* Efek transisi halus pada slot foto */
         .photo-slot {
@@ -1379,6 +1524,138 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     { x: 0.075, y: 0.055, w: 0.85, h: 0.89 },
                     { x: 0.715, y: 0.565, w: 0.275, h: 0.345, overlay: true, polaroid: true, rotate: -12 }
                 ]
+            },
+
+            // --- TEMPLATE KLASIK & AWAL (SMKS BUDI MULYA) ---
+            {
+                id: 'oval-frame', name: 'Bingkai Oval Klasik', count: 1,
+                slots: [
+                    { x: 0.16, y: 0.18, w: 0.68, h: 0.68, oval: true }
+                ]
+            },
+            {
+                id: 'stamp1-frame', name: 'Perangko 1', count: 1,
+                slots: [
+                    { x: 0.25, y: 0.20, w: 0.50, h: 0.60, polaroid: true }
+                ]
+            },
+            {
+                id: 'ticket-frame', name: 'Kartu Tiket 1', count: 1,
+                slots: [
+                    { x: 0.30, y: 0.18, w: 0.40, h: 0.64, polaroid: true }
+                ]
+            },
+            {
+                id: 'stamp2-frame', name: 'Perangko 2', count: 2,
+                slots: [
+                    { x: 0.10, y: 0.28, w: 0.36, h: 0.44, polaroid: true },
+                    { x: 0.54, y: 0.28, w: 0.36, h: 0.44, polaroid: true }
+                ]
+            },
+            {
+                id: 'stag2-duo', name: 'Dua Potret Diagonal', count: 2,
+                slots: [
+                    { x: 0.487, y: 0.149, w: 0.305, h: 0.36 },
+                    { x: 0.25, y: 0.514, w: 0.245, h: 0.365 }
+                ]
+            },
+            {
+                id: 'overlap-2', name: 'Tumpuk 2', count: 2,
+                slots: [
+                    { x: 0, y: 0.5, w: 1, h: 0.5 },
+                    { x: 0.25, y: 0.22, w: 0.5, h: 0.52, overlay: true }
+                ]
+            },
+            {
+                id: 'half-2', name: 'Separuh + Bawah', count: 2,
+                slots: [
+                    { x: 0.3, y: 0.10, w: 0.4, h: 0.34, oval: true },
+                    { x: 0, y: 0.514, w: 1, h: 0.486 }
+                ]
+            },
+            {
+                id: 'spread-book', name: 'Buku Terbuka', count: 2,
+                slots: [
+                    { x: 0.16, y: 0.38, w: 0.26, h: 0.22 },
+                    { x: 0.48, y: 0.28, w: 0.40, h: 0.42 }
+                ]
+            },
+            {
+                id: 'hijau-duo', name: 'Dua Foto Tengah', count: 2,
+                slots: [
+                    { x: 0.08, y: 0.269, w: 0.411, h: 0.462 },
+                    { x: 0.51, y: 0.269, w: 0.411, h: 0.462 }
+                ]
+            },
+            {
+                id: 'duo-trio', name: 'Trio Klasik', count: 3,
+                slots: [
+                    { x: 0.04, y: 0.28, w: 0.29, h: 0.40 },
+                    { x: 0.355, y: 0.28, w: 0.29, h: 0.40 },
+                    { x: 0.67, y: 0.28, w: 0.29, h: 0.40, oval: true }
+                ]
+            },
+            {
+                id: 'b12-bottom', name: '2 Atas + 1 Lebar', count: 3,
+                slots: [
+                    { x: 0, y: 0, w: 0.5, h: 0.4 },
+                    { x: 0.5, y: 0, w: 0.5, h: 0.4 },
+                    { x: 0, y: 0.4, w: 1, h: 0.6 }
+                ]
+            },
+            {
+                id: 'v4-rows', name: '4 Tumpuk Baris', count: 4,
+                slots: [
+                    { x: 0, y: 0, w: 1, h: 0.25 },
+                    { x: 0, y: 0.25, w: 1, h: 0.25 },
+                    { x: 0, y: 0.5, w: 1, h: 0.25 },
+                    { x: 0, y: 0.75, w: 1, h: 0.25 }
+                ]
+            },
+            {
+                id: 'mos-5', name: 'Mosaik 5 Catur', count: 5,
+                slots: [
+                    { x: 0, y: 0, w: 1/3, h: 1/3 },
+                    { x: 2/3, y: 0, w: 1/3, h: 1/3 },
+                    { x: 1/3, y: 1/3, w: 1/3, h: 1/3 },
+                    { x: 0, y: 2/3, w: 1/3, h: 1/3 },
+                    { x: 2/3, y: 2/3, w: 1/3, h: 1/3 }
+                ]
+            },
+            {
+                id: 'stair-5', name: 'Tangga 5 Klasik', count: 5,
+                slots: [
+                    { x: 0.5, y: 0, w: 0.5, h: 0.33 },
+                    { x: 0.35, y: 0.33, w: 0.65, h: 0.34 },
+                    { x: 0.18, y: 0.67, w: 0.82/3, h: 0.33 },
+                    { x: 0.18 + 0.82/3, y: 0.67, w: 0.82/3, h: 0.33 },
+                    { x: 0.18 + 1.64/3, y: 0.67, w: 0.82/3, h: 0.33 }
+                ]
+            },
+            {
+                id: 'ruang-6', name: 'Ruang Teks 6', count: 6,
+                slots: [
+                    { x: 0.456, y: 0.072, w: 0.246, h: 0.276 },
+                    { x: 0.716, y: 0.072, w: 0.246, h: 0.276 },
+                    { x: 0.085, y: 0.363, w: 0.246, h: 0.276 },
+                    { x: 0.345, y: 0.363, w: 0.246, h: 0.276 },
+                    { x: 0.457, y: 0.654, w: 0.246, h: 0.276 },
+                    { x: 0.719, y: 0.654, w: 0.246, h: 0.276 }
+                ]
+            },
+            {
+                id: 'g9-grid', name: '9 Grid 3×3', count: 9,
+                slots: [
+                    { x: 0, y: 0, w: 1/3, h: 1/3 },
+                    { x: 1/3, y: 0, w: 1/3, h: 1/3 },
+                    { x: 2/3, y: 0, w: 1/3, h: 1/3 },
+                    { x: 0, y: 1/3, w: 1/3, h: 1/3 },
+                    { x: 1/3, y: 1/3, w: 1/3, h: 1/3 },
+                    { x: 2/3, y: 1/3, w: 1/3, h: 1/3 },
+                    { x: 0, y: 2/3, w: 1/3, h: 1/3 },
+                    { x: 1/3, y: 2/3, w: 1/3, h: 1/3 },
+                    { x: 2/3, y: 2/3, w: 1/3, h: 1/3 }
+                ]
             }
         ];
 
@@ -2109,7 +2386,11 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     const rh = Math.max(4, s.h * 100 - pad * 2);
                     const fill = isSelected ? '#f472b6' : '#94a3b8';
                     const stroke = s.overlay ? '#0f172a' : 'none';
-                    return `<rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" rx="6" fill="${fill}" fill-opacity="${isSelected ? '0.85' : '0.45'}" stroke="${stroke}" stroke-width="${s.overlay ? '3' : '0'}" />`;
+                    const fCol = isSelected ? '#2563eb' : '#64748b';
+                    if (s.oval) {
+                        return `<ellipse cx="${rx + rw / 2}" cy="${ry + rh / 2}" rx="${rw / 2}" ry="${rh / 2}" fill="${fCol}" fill-opacity="${isSelected ? '0.85' : '0.45'}" stroke="${stroke}" stroke-width="${s.overlay ? '3' : '0'}" />`;
+                    }
+                    return `<rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" rx="6" fill="${fCol}" fill-opacity="${isSelected ? '0.85' : '0.45'}" stroke="${stroke}" stroke-width="${s.overlay ? '3' : '0'}" />`;
                 }).join('');
 
                 card.innerHTML = `
@@ -2594,7 +2875,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 slotEl.style.top = `${top}px`;
                 slotEl.style.width = `${width}px`;
                 slotEl.style.height = `${height}px`;
-                slotEl.style.borderRadius = slot.polaroid ? '2px' : `${state.radius}px`;
+                slotEl.style.borderRadius = slot.oval ? '9999px' : (slot.polaroid ? '2px' : `${state.radius}px`);
                 slotEl.style.zIndex = slot.overlay ? '15' : '5';
 
                 if (slot.rotate) {
@@ -2613,7 +2894,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
                 const innerBox = document.createElement('div');
                 innerBox.className = 'w-full h-full relative overflow-hidden flex items-center justify-center';
-                innerBox.style.borderRadius = slot.polaroid ? '1px' : `${Math.max(0, state.radius - 2)}px`;
+                innerBox.style.borderRadius = slot.oval ? '9999px' : (slot.polaroid ? '1px' : `${Math.max(0, state.radius - 2)}px`);
                 innerBox.style.background = lightBg ? 'rgba(15, 23, 42, 0.06)' : 'rgba(255, 255, 255, 0.08)';
 
                 const photo = slide.photos[idx];
@@ -3412,8 +3693,14 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         ctx.shadowColor = 'rgba(0,0,0,0.35)';
                         ctx.shadowBlur = 24 * scaleFactor;
                     }
-                    roundRectPath(ctx, 0, 0, width, height, rad);
-                    ctx.clip();
+                    if (slot.oval) {
+                        ctx.beginPath();
+                        ctx.ellipse(width / 2, height / 2, width / 2, height / 2, 0, 0, Math.PI * 2);
+                        ctx.clip();
+                    } else {
+                        roundRectPath(ctx, 0, 0, width, height, rad);
+                        ctx.clip();
+                    }
                 }
 
                 const photo = slide.photos[idx];
