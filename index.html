@@ -1045,6 +1045,57 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                             <input type="range" id="input-bgm-vol" min="0" max="1" step="0.05" value="0.8" class="w-full cursor-pointer">
                         </div>
                     </div>
+
+                    <!-- Watermark Default Sekolah & Custom PNG -->
+                    <div class="pt-3 border-t border-white/10 space-y-2.5">
+                        <label class="flex items-center justify-between cursor-pointer">
+                            <span class="text-xs text-slate-300 font-medium">Watermark Sekolah / Custom</span>
+                            <span class="flex items-center gap-1.5 text-xs font-semibold">
+                                <input type="checkbox" id="chk-wm-enable" class="w-4 h-4 accent-amber-400 cursor-pointer">
+                                <span>Aktifkan</span>
+                            </span>
+                        </label>
+                        <input type="file" id="wm-custom-input" accept="image/png,image/webp,image/*" class="hidden">
+                        <div class="grid grid-cols-3 gap-1.5">
+                            <button id="btn-wm-dark" class="px-2 py-1.5 rounded-xl text-[11px] font-semibold border transition">Gelap (Hitam)</button>
+                            <button id="btn-wm-light" class="px-2 py-1.5 rounded-xl text-[11px] font-semibold border transition">Putih</button>
+                            <button id="btn-wm-custom" class="px-2 py-1.5 rounded-xl text-[11px] font-medium border transition">Upload PNG</button>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-400 mb-1">Tata Letak Watermark</label>
+                            <select id="select-wm-pos" class="w-full px-2.5 py-1.5 rounded-xl text-xs border">
+                                <option value="full">Overlay Penuh (Sesuai Template)</option>
+                                <option value="bc">Bawah Tengah</option>
+                                <option value="br">Bawah Kanan</option>
+                                <option value="bl">Bawah Kiri</option>
+                                <option value="tc">Atas Tengah</option>
+                                <option value="tr">Atas Kanan</option>
+                                <option value="tl">Atas Kiri</option>
+                                <option value="cc">Tengah Kanvas</option>
+                            </select>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-slate-400">Besar / Ukuran Watermark</span>
+                                <span id="val-wm-scale" class="font-semibold">100%</span>
+                            </div>
+                            <input type="range" id="input-wm-scale" min="0.2" max="1.5" step="0.05" value="1" class="w-full cursor-pointer">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-slate-400">Geser Atas / Bawah</span>
+                                <span id="val-wm-y" class="font-semibold">0%</span>
+                            </div>
+                            <input type="range" id="input-wm-y" min="-25" max="25" step="1" value="0" class="w-full cursor-pointer">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-slate-400">Transparansi</span>
+                                <span id="val-wm-opacity" class="font-semibold">95%</span>
+                            </div>
+                            <input type="range" id="input-wm-opacity" min="0.1" max="1" step="0.05" value="0.95" class="w-full cursor-pointer">
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -1705,6 +1756,39 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             vintage: 'sepia(0.45) contrast(0.95) brightness(0.95)'
         };
 
+const WM_PRESETS = { dark: null, light: null };
+        ['dark', 'light'].forEach(k => {
+            const im = new Image();
+            im.onload = () => { WM_PRESETS[k] = im; if (state.wmEnabled) renderCollage(); };
+            im.src = `watermark-${k}.png`;
+        });
+
+        function getActiveWatermark() {
+            if (!state.wmEnabled) return null;
+            if (state.wmMode === 'custom' && state.wmCustom && state.wmCustom.imgObj) return state.wmCustom.imgObj;
+            return WM_PRESETS[state.wmMode] || WM_PRESETS.dark || WM_PRESETS.light;
+        }
+
+        function getWatermarkGeometry(W, H, imgW, imgH) {
+            const aspect = imgH / Math.max(1, imgW);
+            let dw, dh, x, y;
+            if (state.wmPos === 'full') {
+                dw = W * (state.wmScale || 1);
+                dh = dw * aspect;
+                x = (W - dw) / 2;
+                y = H - dh + (state.wmOffsetY / 100) * H;
+            } else {
+                const baseFactor = state.wmScale <= 1 ? state.wmScale * 0.45 : state.wmScale * 0.55;
+                dw = W * baseFactor;
+                dh = dw * aspect;
+                const m = W * 0.04;
+                const p = state.wmPos;
+                x = p[1] === 'l' ? m : (p[1] === 'r' ? W - dw - m : (W - dw) / 2);
+                y = (p[0] === 't' ? m : (p[0] === 'b' ? H - dh - m : (H - dh) / 2)) + (state.wmOffsetY / 100) * H;
+            }
+            return { x, y, dw, dh };
+        }
+
         function buildFilterCss(p) {
             const base = FILTERS[p.filter || 'none'];
             const exp = p.exposure != null ? p.exposure : 1;
@@ -1844,7 +1928,14 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             bgm: null,
             bgmStart: 0,
             bgmVol: 0.8,
-            storyDuration: 0,             // Objek gradasi { css, c1, c2, isLight } jika aktif
+            storyDuration: 0,
+            wmEnabled: false,
+            wmMode: 'dark',
+            wmPos: 'full',
+            wmScale: 1,
+            wmOffsetY: 0,
+            wmOpacity: 0.95,
+            wmCustom: null,             // Objek gradasi { css, c1, c2, isLight } jika aktif
             slides: [],                   // Diisi saat initApp
             currentSlideIndex: 0,         // Slide yang sedang aktif diedit
             activeSlotIndex: null,        // Indeks slot yang sedang dipilih user
@@ -3185,6 +3276,24 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
             boardEl.appendChild(strokeSvg);
 
+// 2B. Render Watermark Sekolah / Custom di Preview
+            const wmImg = getActiveWatermark();
+            if (wmImg) {
+                const { x, y, dw, dh } = getWatermarkGeometry(W, H, wmImg.width, wmImg.height);
+                const wmEl = document.createElement('img');
+                wmEl.src = wmImg.src;
+                wmEl.className = 'pointer-events-none select-none';
+                wmEl.style.position = 'absolute';
+                wmEl.style.left = `${x}px`;
+                wmEl.style.top = `${y}px`;
+                wmEl.style.width = `${dw}px`;
+                wmEl.style.height = `${dh}px`;
+                wmEl.style.maxWidth = 'none';
+                wmEl.style.opacity = String(state.wmOpacity != null ? state.wmOpacity : 0.95);
+                wmEl.style.zIndex = '45';
+                boardEl.appendChild(wmEl);
+            }
+
             // 3. Render Layer Stiker Doodle & Teks Tulisan Tangan
             (slide.doodles || []).forEach(item => {
                 const isSelected = state.activeDoodleId === item.id;
@@ -3959,6 +4068,16 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 ctx.restore();
             }
 
+// Render Watermark Sekolah / Custom di atas hasil akhir
+            const wmImg = getActiveWatermark();
+            if (wmImg) {
+                const { x, y, dw, dh } = getWatermarkGeometry(outW, outH, wmImg.width, wmImg.height);
+                ctx.save();
+                ctx.globalAlpha = state.wmOpacity != null ? state.wmOpacity : 0.95;
+                ctx.drawImage(wmImg, x, y, dw, dh);
+                ctx.restore();
+            }
+
             return canvas;
         }
 
@@ -4320,6 +4439,72 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 });
                 obs.observe(origDoodleEdit, { attributes: true, attributeFilter: ['class'] });
             }
+        })();
+
+        // Event Handler Watermark Sekolah / Custom
+        (function setupWatermarkControls() {
+            const chk = document.getElementById('chk-wm-enable');
+            const btnDark = document.getElementById('btn-wm-dark');
+            const btnLight = document.getElementById('btn-wm-light');
+            const btnCustom = document.getElementById('btn-wm-custom');
+            const customInput = document.getElementById('wm-custom-input');
+            const selPos = document.getElementById('select-wm-pos');
+            const inScale = document.getElementById('input-wm-scale');
+            const valScale = document.getElementById('val-wm-scale');
+            const inY = document.getElementById('input-wm-y');
+            const valY = document.getElementById('val-wm-y');
+            const inOp = document.getElementById('input-wm-opacity');
+            const valOp = document.getElementById('val-wm-opacity');
+
+            if (chk) chk.addEventListener('change', e => { state.wmEnabled = e.target.checked; renderCollage(); });
+            if (btnDark) btnDark.addEventListener('click', () => { state.wmMode = 'dark'; state.wmEnabled = true; if (chk) chk.checked = true; renderCollage(); showToast('Watermark Gelap aktif'); });
+            if (btnLight) btnLight.addEventListener('click', () => { state.wmMode = 'light'; state.wmEnabled = true; if (chk) chk.checked = true; renderCollage(); showToast('Watermark Putih aktif'); });
+            if (btnCustom && customInput) {
+                btnCustom.addEventListener('click', () => customInput.click());
+                customInput.addEventListener('change', e => {
+                    const f = e.target.files[0];
+                    if (!f) return;
+                    const reader = new FileReader();
+                    reader.onload = ev => {
+                        const im = new Image();
+                        im.onload = () => {
+                            state.wmCustom = { src: ev.target.result, imgObj: im };
+                            state.wmMode = 'custom';
+                            state.wmEnabled = true;
+                            if (chk) chk.checked = true;
+                            renderCollage();
+                            showToast('Watermark custom dipasang!');
+                        };
+                        im.src = ev.target.result;
+                    };
+                    reader.readAsDataURL(f);
+                    customInput.value = '';
+                });
+            }
+            if (selPos) selPos.addEventListener('change', e => {
+                state.wmPos = e.target.value;
+                if (state.wmPos === 'full' && state.wmScale < 0.8) {
+                    state.wmScale = 1;
+                    if (inScale) inScale.value = 1;
+                    if (valScale) valScale.textContent = '100%';
+                }
+                renderCollage();
+            });
+            if (inScale) inScale.addEventListener('input', e => {
+                state.wmScale = parseFloat(e.target.value) || 1;
+                if (valScale) valScale.textContent = Math.round(state.wmScale * 100) + '%';
+                renderCollage();
+            });
+            if (inY) inY.addEventListener('input', e => {
+                state.wmOffsetY = parseFloat(e.target.value) || 0;
+                if (valY) valY.textContent = state.wmOffsetY + '%';
+                renderCollage();
+            });
+            if (inOp) inOp.addEventListener('input', e => {
+                state.wmOpacity = parseFloat(e.target.value) || 0.95;
+                if (valOp) valOp.textContent = Math.round(state.wmOpacity * 100) + '%';
+                renderCollage();
+            });
         })();
 
         if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
