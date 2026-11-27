@@ -81,7 +81,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .text-slate-400 {
             color: var(--mu) !important;
         }
-        aside button:not(.tab-btn):not(.bg-gradient-to-r),
+        aside button:not(.tab-btn):not(.bg-gradient-to-r):not(.color-swatch):not(.grad-swatch):not(.brush-color-btn):not(.doodle-color-btn):not([data-color]),
         header button:not(#btn-download),
         #slot-toolbar button,
         #doodle-toolbar button {
@@ -89,7 +89,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             color: var(--tx) !important;
             border-color: var(--ln) !important;
         }
-        aside button:not(.tab-btn):not(.bg-gradient-to-r):hover,
+        aside button:not(.tab-btn):not(.bg-gradient-to-r):not(.color-swatch):not(.grad-swatch):not(.brush-color-btn):not(.doodle-color-btn):not([data-color]):hover,
         header button:not(#btn-download):hover,
         #slot-toolbar button:hover,
         #doodle-toolbar button:hover {
@@ -257,6 +257,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         <!-- Toolbar Aksi Cepat -->
         <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+            <button id="btn-toggle-sidebar" title="Sembunyikan / Tampilkan Panel Template" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-100 text-xs sm:text-sm font-medium border border-white/10 transition active:scale-95">
+                <span id="toggle-sidebar-icon">◧</span>
+                <span id="toggle-sidebar-label" class="hidden md:inline">Sembunyikan Panel</span>
+            </button>
             <!-- Tombol Undo & Redo -->
             <div class="flex items-center bg-white/5 rounded-xl border border-white/10 p-0.5">
                 <button id="btn-undo" title="Undo (Ctrl+Z)" disabled="" class="p-1.5 sm:p-2 rounded-lg hover:bg-white/10 text-slate-200 disabled:opacity-30 disabled:pointer-events-none transition active:scale-95">
@@ -288,128 +292,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     <!-- Main Workspace (Full Screen di HP Potret & Laptop/Desktop) -->
     <main class="flex-1 min-h-0 w-full flex flex-col lg:flex-row overflow-hidden">
         
-        <!-- Area Kanvas Tengah (56% tinggi di HP Potret, fleksibel penuh di Laptop/Web) -->
-        <section class="h-[56%] lg:h-full lg:flex-1 min-h-0 min-w-0 flex flex-col canvas-workspace-bg relative overflow-hidden">
-            
-            <!-- Bilah Navigasi Carousel di Bagian Atas Kanvas -->
-            <div class="w-full bg-slate-900/55 backdrop-blur-xl border-b border-white/10 px-3 sm:px-4 py-1.5 sm:py-2.5 flex items-center justify-between gap-2 z-20 shrink-0">
-                <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto py-0.5 max-w-full" id="carousel-nav-pills"><button class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition shrink-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-md shadow-fuchsia-600/25">
-                        <span>Slide 1</span>
-                        <span class="text-[10px] px-1.5 py-0.2 rounded-md bg-black/25 text-white">0/1</span>
-                    </button></div>
-                <div class="flex items-center gap-1.5 shrink-0">
-                    <button id="btn-dup-slide" title="Duplikat Slide Ini" class="flex items-center gap-1 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-medium border border-white/10 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="copy-plus" aria-hidden="true" class="lucide lucide-copy-plus w-3.5 h-3.5 text-sky-400"><line x1="15" x2="15" y1="12" y2="18"></line><line x1="12" x2="18" y1="15" y2="15"></line><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
-                        <span class="hidden sm:inline">Duplikat</span>
-                    </button>
-                    <button id="btn-add-slide" title="Tambah Slide Baru" class="flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 hover:from-violet-500/30 hover:to-fuchsia-500/30 text-fuchsia-200 text-xs font-semibold border border-fuchsia-500/30 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="plus" aria-hidden="true" class="lucide lucide-plus w-3.5 h-3.5"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
-                        <span>Slide</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Pembungkus Kanvas Utama -->
-            <div id="workspace-area" class="flex-1 min-h-0 flex flex-col items-center justify-center p-2.5 sm:p-6 lg:p-8 relative overflow-hidden">
-                <!-- Info Rasio & Slide Aktif -->
-                <div id="workspace-info-badge" class="mb-2 sm:mb-3.5 flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-300 bg-slate-900/65 backdrop-blur-xl px-3 py-1 sm:py-1.5 rounded-full border border-white/10 shadow-lg shrink-0">
-                    <span id="badge-slide" class="font-semibold text-fuchsia-300">Slide 1 / 1</span>
-                    <span class="text-white/20">•</span>
-                    <span id="badge-ratio" class="font-semibold text-sky-300">4:5 Potret IG</span>
-                    <span class="text-white/20 hidden sm:inline">•</span>
-                    <span id="badge-resolution" class="text-slate-400 hidden sm:inline">1080 × 1350 px</span>
-                </div>
-
-                <!-- Kontainer Papan Kolase dengan Navigasi Kiri/Kanan -->
-                <div class="relative flex items-center justify-center w-full max-w-full min-h-0">
-                    <button id="btn-prev-slide" title="Slide Sebelumnya" class="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-slate-900/80 hover:bg-gradient-to-r hover:from-violet-600 hover:to-fuchsia-600 text-slate-200 border border-white/15 shadow-xl mr-4 transition disabled:opacity-25 disabled:pointer-events-none shrink-0" disabled="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-left" aria-hidden="true" class="lucide lucide-chevron-left w-5 h-5"><path d="m15 18-6-6 6-6"></path></svg>
-                    </button>
-
-                    <!-- Kanvas Kolase -->
-                    <div id="collage-board" class="relative shadow-[0_25px_60px_-15px_rgba(0,0,0,0.75)] ring-1 ring-white/15 transition-all duration-200 overflow-hidden shrink-0" style="background: rgb(255, 255, 255); width: 611px; height: 764px;"><div class="photo-slot absolute overflow-hidden cursor-pointer flex items-center justify-center " style="left: 16px; top: 16px; width: 579px; height: 732px; border-radius: 12px; z-index: 5;"><div class="w-full h-full relative overflow-hidden flex items-center justify-center" style="border-radius: 10px; background: rgba(15, 23, 42, 0.06);"><div class="flex flex-col items-center justify-center text-center p-2 text-slate-500">
-                        <div class="w-8 h-8 rounded-full bg-slate-900/10 flex items-center justify-center mb-1">
-                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"></path></svg>
-                        </div>
-                        <span class="text-[10px] font-semibold opacity-80">Foto 1</span>
-                    </div></div></div><svg viewBox="0 0 611 764" style="position: absolute; inset: 0px; width: 100%; height: 100%; z-index: 25; pointer-events: none; cursor: default;"></svg></div>
-
-                    <button id="btn-next-slide" title="Slide Berikutnya" class="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-slate-900/80 hover:bg-gradient-to-r hover:from-violet-600 hover:to-fuchsia-600 text-slate-200 border border-white/15 shadow-xl ml-4 transition disabled:opacity-25 disabled:pointer-events-none shrink-0" disabled="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-right" aria-hidden="true" class="lucide lucide-chevron-right w-5 h-5"><path d="m9 18 6-6-6-6"></path></svg>
-                    </button>
-                </div>
-
-                <!-- Floating Toolbar saat Elemen Doodle / Teks Dipilih -->
-                <div id="doodle-toolbar" class="hidden absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 max-w-[96%] bg-slate-900/95 backdrop-blur-xl border border-amber-400/40 rounded-2xl px-3 py-1.5 sm:py-2 shadow-2xl flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 z-30 animate-toast">
-                    <input type="text" id="doodle-text-edit" placeholder="Ketik teks..." class="hidden bg-slate-800 text-white text-xs rounded-xl px-2.5 py-1 border border-white/15 w-28 sm:w-36 focus:outline-none focus:border-amber-400">
-                    <select id="doodle-font-edit" class="hidden bg-slate-800 text-white text-xs rounded-xl px-2 py-1 border border-white/15 focus:outline-none focus:border-amber-400">
-                        <option value="Patrick Hand">Tulisan Kapur</option>
-                        <option value="Pacifico">Kaligrafi Brush</option>
-                        <option value="Fredoka">Tebal Bulat (Bubble)</option>
-                        <option value="Permanent Marker">Spidol Tebal</option>
-                        <option value="Caveat">Catatan Santai</option>
-                    </select>
-                    <div class="flex items-center gap-1" id="doodle-quick-colors">
-                        <button data-dcolor="#ffffff" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-white" title="Putih Kapur"></button>
-                        <button data-dcolor="#facc15" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-yellow-400" title="Kuning Cerah"></button>
-                        <button data-dcolor="#f472b6" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-pink-400" title="Pink Pastel"></button>
-                        <button data-dcolor="#38bdf8" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-sky-400" title="Biru Langit"></button>
-                        <button data-dcolor="#1e293b" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-slate-800" title="Hitam Tinta"></button>
-                    </div>
-                    <div class="h-4 w-[1px] bg-white/15 mx-0.5 hidden sm:block"></div>
-                    <div class="flex items-center gap-1 bg-white/5 px-2 py-0.5 sm:py-1 rounded-xl border border-white/10" title="Atur Ukuran Stiker/Teks">
-                        <span class="text-[10px] text-slate-300 font-medium hidden sm:inline">Ukuran</span>
-                        <input type="range" id="doodle-scale-slider" min="0.25" max="4" step="0.05" value="1" class="w-14 sm:w-20 accent-amber-400 cursor-pointer">
-                        <span id="doodle-scale-val" class="text-[10px] text-amber-300 font-semibold w-7 text-right">100%</span>
-                    </div>
-                    <div class="flex items-center gap-1 bg-white/5 px-2 py-0.5 sm:py-1 rounded-xl border border-white/10" title="Atur Sudut Putar">
-                        <span class="text-[10px] text-slate-300 font-medium hidden sm:inline">Putar</span>
-                        <input type="range" id="doodle-rot-slider" min="-180" max="180" step="1" value="0" class="w-14 sm:w-20 accent-fuchsia-400 cursor-pointer">
-                        <span id="doodle-rot-val" class="text-[10px] text-fuchsia-300 font-semibold w-6 text-right">0°</span>
-                    </div>
-                    <button id="doodle-scale-down" title="Perkecil" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="minus" aria-hidden="true" class="lucide lucide-minus w-3.5 h-3.5"><path d="M5 12h14"></path></svg></button>
-                    <button id="doodle-scale-up" title="Perbesar" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="plus" aria-hidden="true" class="lucide lucide-plus w-3.5 h-3.5"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
-                    <button id="doodle-rot-left" title="Putar Kiri" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="rotate-ccw" aria-hidden="true" class="lucide lucide-rotate-ccw w-3.5 h-3.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg></button>
-                    <button id="doodle-rot-right" title="Putar Kanan" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="rotate-cw" aria-hidden="true" class="lucide lucide-rotate-cw w-3.5 h-3.5"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg></button>
-                    <button id="doodle-glow-toggle" title="Efek Cahaya / Glow" class="px-2 py-1 rounded-xl bg-white/5 hover:bg-white/15 text-amber-300 text-[10px] sm:text-[11px] font-semibold border border-white/10 transition">Glow</button>
-                    <button id="doodle-duplicate" title="Duplikat Doodle" class="p-1 sm:p-1.5 rounded-xl bg-white/5 hover:bg-white/15 text-sky-300 transition"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="copy" aria-hidden="true" class="lucide lucide-copy w-3.5 h-3.5"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button>
-                    <button id="doodle-delete" title="Hapus Doodle" class="p-1 sm:p-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 transition"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" class="lucide lucide-trash-2 w-3.5 h-3.5"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
-                </div>
-
-                <!-- Floating Toolbar saat Slot Foto Dipilih -->
-                <div id="slot-toolbar" class="hidden absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 max-w-[96%] bg-slate-900/95 backdrop-blur-xl border border-white/15 rounded-2xl px-3 py-1.5 sm:py-2 shadow-2xl flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 z-30 animate-toast">
-                    <button id="slot-replace" class="flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white text-xs font-semibold transition shadow">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="image-plus" aria-hidden="true" class="lucide lucide-image-plus w-3.5 h-3.5"><path d="M16 5h6"></path><path d="M19 2v6"></path><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5"></path><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path><circle cx="9" cy="9" r="2"></circle></svg>
-                        <span>Ganti</span>
-                    </button>
-                    <div class="h-4 w-[1px] bg-white/15 mx-0.5"></div>
-                    <button id="slot-zoom-in" title="Perbesar Foto" class="p-1 sm:p-1.5 rounded-xl bg-white/5 hover:bg-white/15 text-slate-200 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="zoom-in" aria-hidden="true" class="lucide lucide-zoom-in w-4 h-4"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line><line x1="11" x2="11" y1="8" y2="14"></line><line x1="8" x2="14" y1="11" y2="11"></line></svg>
-                    </button>
-                    <button id="slot-zoom-out" title="Perkecil Foto" class="p-1 sm:p-1.5 rounded-xl bg-white/5 hover:bg-white/15 text-slate-200 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="zoom-out" aria-hidden="true" class="lucide lucide-zoom-out w-4 h-4"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line><line x1="8" x2="14" y1="11" y2="11"></line></svg>
-                    </button>
-                    <button id="slot-center" title="Reset Posisi &amp; Zoom" class="p-1 sm:p-1.5 rounded-xl bg-white/5 hover:bg-white/15 text-slate-200 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="maximize-2" aria-hidden="true" class="lucide lucide-maximize-2 w-4 h-4"><path d="M15 3h6v6"></path><path d="m21 3-7 7"></path><path d="m3 21 7-7"></path><path d="M9 21H3v-6"></path></svg>
-                    </button>
-                    <div class="h-4 w-[1px] bg-white/15 mx-0.5"></div>
-                    <select id="slot-filter" class="bg-slate-800/90 text-slate-100 text-xs rounded-xl px-2 py-1 sm:px-2.5 sm:py-1.5 border border-white/15 focus:outline-none focus:border-fuchsia-500">
-                        <option value="none">Filter: Normal</option>
-                        <option value="vivid">Cerah (Vivid)</option>
-                        <option value="warm">Hangat (Warm)</option>
-                        <option value="cool">Sejuk (Cool)</option>
-                        <option value="bw">Hitam Putih</option>
-                        <option value="vintage">Vintage</option>
-                    </select>
-                    <button id="slot-remove" title="Hapus Foto dari Kotak Ini" class="p-1 sm:p-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x w-4 h-4"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
-                    </button>
-                </div>
-            </div>
-        </section>
-
         <!-- Panel Kontrol Kanan / Bawah (44% tinggi di HP Potret, 410px penuh di Laptop/Web) -->
-        <aside class="h-[44%] lg:h-full w-full lg:w-[410px] min-h-0 bg-slate-900/85 backdrop-blur-2xl border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col shrink-0 shadow-2xl">
+        <aside id="side-panel" class="h-[44%] lg:h-full w-full lg:w-[410px] min-h-0 bg-slate-900/85 backdrop-blur-2xl border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col shrink-0 shadow-2xl">
             
             <!-- Navigasi Tab Pengaturan (5 TAB TERMASUK DOODLE ART) -->
             <div class="grid grid-cols-5 border-b border-white/10 p-1.5 gap-1 bg-slate-950/50 shrink-0">
@@ -1112,10 +996,149 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                             <button data-grad="linear-gradient(135deg, #f3e8ff 0%, #fae8ff 100%)" data-c1="#f3e8ff" data-c2="#fae8ff" data-light="true" class="grad-swatch h-9 rounded-xl border-2 border-white/15 shadow transition" style="background: linear-gradient(135deg, #f3e8ff 0%, #fae8ff 100%);" title="Soft Orchid"></button>
                         </div>
                     </div>
+
+                    <!-- Custom Background Foto Kanvas -->
+                    <div class="pt-3 border-t border-white/10 space-y-2.5">
+                        <span class="block text-xs text-slate-300 font-medium">Background Foto Kanvas</span>
+                        <input type="file" id="bg-photo-input" accept="image/*" class="hidden">
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="btn-bg-photo" class="px-3 py-2 rounded-xl text-xs font-semibold border transition">Pilih Foto Latar</button>
+                            <button id="btn-bg-clear" class="px-3 py-2 rounded-xl text-xs font-medium border transition">Hapus Foto</button>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-slate-400">Gelapkan Foto Latar</span>
+                                <span id="val-bg-dim" class="font-semibold">0%</span>
+                            </div>
+                            <input type="range" id="input-bg-dim" min="0" max="0.75" step="0.05" value="0" class="w-full cursor-pointer">
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </aside>
+
+        <!-- Area Kanvas Tengah (56% tinggi di HP Potret, fleksibel penuh di Laptop/Web) -->
+        <section class="h-[56%] lg:h-full lg:flex-1 min-h-0 min-w-0 flex flex-col canvas-workspace-bg relative overflow-hidden">
+            
+            <!-- Bilah Navigasi Carousel di Bagian Atas Kanvas -->
+            <div class="w-full bg-slate-900/55 backdrop-blur-xl border-b border-white/10 px-3 sm:px-4 py-1.5 sm:py-2.5 flex items-center justify-between gap-2 z-20 shrink-0">
+                <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto py-0.5 max-w-full" id="carousel-nav-pills"><button class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition shrink-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-md shadow-fuchsia-600/25">
+                        <span>Slide 1</span>
+                        <span class="text-[10px] px-1.5 py-0.2 rounded-md bg-black/25 text-white">0/1</span>
+                    </button></div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <button id="btn-dup-slide" title="Duplikat Slide Ini" class="flex items-center gap-1 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-medium border border-white/10 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="copy-plus" aria-hidden="true" class="lucide lucide-copy-plus w-3.5 h-3.5 text-sky-400"><line x1="15" x2="15" y1="12" y2="18"></line><line x1="12" x2="18" y1="15" y2="15"></line><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+                        <span class="hidden sm:inline">Duplikat</span>
+                    </button>
+                    <button id="btn-add-slide" title="Tambah Slide Baru" class="flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 hover:from-violet-500/30 hover:to-fuchsia-500/30 text-fuchsia-200 text-xs font-semibold border border-fuchsia-500/30 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="plus" aria-hidden="true" class="lucide lucide-plus w-3.5 h-3.5"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+                        <span>Slide</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pembungkus Kanvas Utama -->
+            <div id="workspace-area" class="flex-1 min-h-0 flex flex-col items-center justify-center p-2.5 sm:p-6 lg:p-8 relative overflow-hidden">
+                <!-- Info Rasio & Slide Aktif -->
+                <div id="workspace-info-badge" class="mb-2 sm:mb-3.5 flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-300 bg-slate-900/65 backdrop-blur-xl px-3 py-1 sm:py-1.5 rounded-full border border-white/10 shadow-lg shrink-0">
+                    <span id="badge-slide" class="font-semibold text-fuchsia-300">Slide 1 / 1</span>
+                    <span class="text-white/20">•</span>
+                    <span id="badge-ratio" class="font-semibold text-sky-300">4:5 Potret IG</span>
+                    <span class="text-white/20 hidden sm:inline">•</span>
+                    <span id="badge-resolution" class="text-slate-400 hidden sm:inline">1080 × 1350 px</span>
+                </div>
+
+                <!-- Kontainer Papan Kolase dengan Navigasi Kiri/Kanan -->
+                <div class="relative flex items-center justify-center w-full max-w-full min-h-0">
+                    <button id="btn-prev-slide" title="Slide Sebelumnya" class="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-slate-900/80 hover:bg-gradient-to-r hover:from-violet-600 hover:to-fuchsia-600 text-slate-200 border border-white/15 shadow-xl mr-4 transition disabled:opacity-25 disabled:pointer-events-none shrink-0" disabled="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-left" aria-hidden="true" class="lucide lucide-chevron-left w-5 h-5"><path d="m15 18-6-6 6-6"></path></svg>
+                    </button>
+
+                    <!-- Kanvas Kolase -->
+                    <div id="collage-board" class="relative shadow-[0_25px_60px_-15px_rgba(0,0,0,0.75)] ring-1 ring-white/15 transition-all duration-200 overflow-hidden shrink-0" style="background: rgb(255, 255, 255); width: 611px; height: 764px;"><div class="photo-slot absolute overflow-hidden cursor-pointer flex items-center justify-center " style="left: 16px; top: 16px; width: 579px; height: 732px; border-radius: 12px; z-index: 5;"><div class="w-full h-full relative overflow-hidden flex items-center justify-center" style="border-radius: 10px; background: rgba(15, 23, 42, 0.06);"><div class="flex flex-col items-center justify-center text-center p-2 text-slate-500">
+                        <div class="w-8 h-8 rounded-full bg-slate-900/10 flex items-center justify-center mb-1">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"></path></svg>
+                        </div>
+                        <span class="text-[10px] font-semibold opacity-80">Foto 1</span>
+                    </div></div></div><svg viewBox="0 0 611 764" style="position: absolute; inset: 0px; width: 100%; height: 100%; z-index: 25; pointer-events: none; cursor: default;"></svg></div>
+
+                    <button id="btn-next-slide" title="Slide Berikutnya" class="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-slate-900/80 hover:bg-gradient-to-r hover:from-violet-600 hover:to-fuchsia-600 text-slate-200 border border-white/15 shadow-xl ml-4 transition disabled:opacity-25 disabled:pointer-events-none shrink-0" disabled="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-right" aria-hidden="true" class="lucide lucide-chevron-right w-5 h-5"><path d="m9 18 6-6-6-6"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Floating Toolbar saat Elemen Doodle / Teks Dipilih -->
+                <div id="doodle-toolbar" class="hidden absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 max-w-[96%] bg-slate-900/95 backdrop-blur-xl border border-amber-400/40 rounded-2xl px-3 py-1.5 sm:py-2 shadow-2xl flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 z-30 animate-toast">
+                    <input type="text" id="doodle-text-edit" placeholder="Ketik teks..." class="hidden bg-slate-800 text-white text-xs rounded-xl px-2.5 py-1 border border-white/15 w-28 sm:w-36 focus:outline-none focus:border-amber-400">
+                    <select id="doodle-font-edit" class="hidden bg-slate-800 text-white text-xs rounded-xl px-2 py-1 border border-white/15 focus:outline-none focus:border-amber-400">
+                        <option value="Patrick Hand">Tulisan Kapur</option>
+                        <option value="Pacifico">Kaligrafi Brush</option>
+                        <option value="Fredoka">Tebal Bulat (Bubble)</option>
+                        <option value="Permanent Marker">Spidol Tebal</option>
+                        <option value="Caveat">Catatan Santai</option>
+                    </select>
+                    <div class="flex items-center gap-1" id="doodle-quick-colors">
+                        <button data-dcolor="#ffffff" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-white" title="Putih Kapur"></button>
+                        <button data-dcolor="#facc15" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-yellow-400" title="Kuning Cerah"></button>
+                        <button data-dcolor="#f472b6" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-pink-400" title="Pink Pastel"></button>
+                        <button data-dcolor="#38bdf8" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-sky-400" title="Biru Langit"></button>
+                        <button data-dcolor="#1e293b" class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-white/40 bg-slate-800" title="Hitam Tinta"></button>
+                    </div>
+                    <div class="h-4 w-[1px] bg-white/15 mx-0.5 hidden sm:block"></div>
+                    <div class="flex items-center gap-1 bg-white/5 px-2 py-0.5 sm:py-1 rounded-xl border border-white/10" title="Atur Ukuran Stiker/Teks">
+                        <span class="text-[10px] text-slate-300 font-medium hidden sm:inline">Ukuran</span>
+                        <input type="range" id="doodle-scale-slider" min="0.25" max="4" step="0.05" value="1" class="w-14 sm:w-20 accent-amber-400 cursor-pointer">
+                        <span id="doodle-scale-val" class="text-[10px] text-amber-300 font-semibold w-7 text-right">100%</span>
+                    </div>
+                    <div class="flex items-center gap-1 bg-white/5 px-2 py-0.5 sm:py-1 rounded-xl border border-white/10" title="Atur Sudut Putar">
+                        <span class="text-[10px] text-slate-300 font-medium hidden sm:inline">Putar</span>
+                        <input type="range" id="doodle-rot-slider" min="-180" max="180" step="1" value="0" class="w-14 sm:w-20 accent-fuchsia-400 cursor-pointer">
+                        <span id="doodle-rot-val" class="text-[10px] text-fuchsia-300 font-semibold w-6 text-right">0°</span>
+                    </div>
+                    <button id="doodle-scale-down" title="Perkecil" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="minus" aria-hidden="true" class="lucide lucide-minus w-3.5 h-3.5"><path d="M5 12h14"></path></svg></button>
+                    <button id="doodle-scale-up" title="Perbesar" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="plus" aria-hidden="true" class="lucide lucide-plus w-3.5 h-3.5"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
+                    <button id="doodle-rot-left" title="Putar Kiri" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="rotate-ccw" aria-hidden="true" class="lucide lucide-rotate-ccw w-3.5 h-3.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg></button>
+                    <button id="doodle-rot-right" title="Putar Kanan" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="rotate-cw" aria-hidden="true" class="lucide lucide-rotate-cw w-3.5 h-3.5"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg></button>
+                    <button id="doodle-glow-toggle" title="Efek Cahaya / Glow" class="px-2 py-1 rounded-xl bg-white/5 hover:bg-white/15 text-amber-300 text-[10px] sm:text-[11px] font-semibold border border-white/10 transition">Glow</button>
+                    <button id="doodle-duplicate" title="Duplikat Doodle" class="p-1 sm:p-1.5 rounded-xl bg-white/5 hover:bg-white/15 text-sky-300 transition"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="copy" aria-hidden="true" class="lucide lucide-copy w-3.5 h-3.5"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button>
+                    <button id="doodle-delete" title="Hapus Doodle" class="p-1 sm:p-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 transition"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" class="lucide lucide-trash-2 w-3.5 h-3.5"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                </div>
+
+                <!-- Floating Toolbar saat Slot Foto Dipilih -->
+                <div id="slot-toolbar" class="hidden absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 max-w-[96%] bg-slate-900/95 backdrop-blur-xl border border-white/15 rounded-2xl px-3 py-1.5 sm:py-2 shadow-2xl flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 z-30 animate-toast">
+                    <button id="slot-replace" class="flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white text-xs font-semibold transition shadow">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="image-plus" aria-hidden="true" class="lucide lucide-image-plus w-3.5 h-3.5"><path d="M16 5h6"></path><path d="M19 2v6"></path><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5"></path><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path><circle cx="9" cy="9" r="2"></circle></svg>
+                        <span>Ganti</span>
+                    </button>
+                    <div class="h-4 w-[1px] bg-white/15 mx-0.5"></div>
+                    <button id="slot-zoom-in" title="Perbesar Foto" class="p-1 sm:p-1.5 rounded-xl bg-white/5 hover:bg-white/15 text-slate-200 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="zoom-in" aria-hidden="true" class="lucide lucide-zoom-in w-4 h-4"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line><line x1="11" x2="11" y1="8" y2="14"></line><line x1="8" x2="14" y1="11" y2="11"></line></svg>
+                    </button>
+                    <button id="slot-zoom-out" title="Perkecil Foto" class="p-1 sm:p-1.5 rounded-xl bg-white/5 hover:bg-white/15 text-slate-200 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="zoom-out" aria-hidden="true" class="lucide lucide-zoom-out w-4 h-4"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line><line x1="8" x2="14" y1="11" y2="11"></line></svg>
+                    </button>
+                    <button id="slot-center" title="Reset Posisi &amp; Zoom" class="p-1 sm:p-1.5 rounded-xl bg-white/5 hover:bg-white/15 text-slate-200 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="maximize-2" aria-hidden="true" class="lucide lucide-maximize-2 w-4 h-4"><path d="M15 3h6v6"></path><path d="m21 3-7 7"></path><path d="m3 21 7-7"></path><path d="M9 21H3v-6"></path></svg>
+                    </button>
+                    <div class="h-4 w-[1px] bg-white/15 mx-0.5"></div>
+                    <select id="slot-filter" class="bg-slate-800/90 text-slate-100 text-xs rounded-xl px-2 py-1 sm:px-2.5 sm:py-1.5 border border-white/15 focus:outline-none focus:border-fuchsia-500">
+                        <option value="none">Filter: Normal</option>
+                        <option value="vivid">Cerah (Vivid)</option>
+                        <option value="warm">Hangat (Warm)</option>
+                        <option value="cool">Sejuk (Cool)</option>
+                        <option value="bw">Hitam Putih</option>
+                        <option value="vintage">Vintage</option>
+                    </select>
+                    <button id="slot-remove" title="Hapus Foto dari Kotak Ini" class="p-1 sm:p-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x w-4 h-4"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
     </main>
 
     <!-- Toast Notification Container -->
@@ -1742,7 +1765,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             padding: 12,                  // Bingkai luar (px di preview)
             radius: 12,                   // Sudut lengkung (px)
             bgColor: '#ffffff',           // Warna solid / fallback border
-            bgGradient: null,             // Objek gradasi { css, c1, c2, isLight } jika aktif
+            bgGradient: null,
+            bgImage: null,
+            bgDim: 0,             // Objek gradasi { css, c1, c2, isLight } jika aktif
             slides: [],                   // Diisi saat initApp
             currentSlideIndex: 0,         // Slide yang sedang aktif diedit
             activeSlotIndex: null,        // Indeks slot yang sedang dipilih user
@@ -2053,6 +2078,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     state.gap = 0;
                     state.padding = 0;
                     state.radius = 0;
+                    state.bgImage = null;
                     state.bgGradient = null;
                     state.bgColor = '#faf8f2';
                     document.getElementById('input-bg-color').value = '#faf8f2';
@@ -2067,6 +2093,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     state.gap = 0;
                     state.padding = 0;
                     state.radius = 0;
+                    state.bgImage = null;
                     state.bgGradient = null;
                     state.bgColor = '#faf8f2';
                     document.getElementById('input-bg-color').value = '#faf8f2';
@@ -2107,6 +2134,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     break;
                 case 'wedding-5':
                     layoutIds = ['1-full', '3-hero-left', '5-center-focus', '4-mosaic', '2-asym-left'];
+                    state.bgImage = null;
                     state.bgGradient = null;
                     state.bgColor = '#f8f5f0';
                     document.getElementById('input-bg-color').value = '#f8f5f0';
@@ -2792,7 +2820,11 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             const H = boardEl.offsetHeight;
             if (W <= 0 || H <= 0) return;
 
-            boardEl.style.background = state.bgGradient ? state.bgGradient.css : state.bgColor;
+            if (state.bgImage && state.bgImage.src) {
+                boardEl.style.background = `linear-gradient(rgba(0,0,0,${state.bgDim || 0}), rgba(0,0,0,${state.bgDim || 0})), url("${state.bgImage.src}") center / cover no-repeat`;
+            } else {
+                boardEl.style.background = state.bgGradient ? state.bgGradient.css : state.bgColor;
+            }
             boardEl.innerHTML = '';
 
             const pad = state.padding;
@@ -3267,6 +3299,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             document.querySelectorAll('.color-swatch').forEach(btn => {
                 btn.addEventListener('click', () => {
                     pushHistory();
+                    state.bgImage = null;
                     state.bgGradient = null;
                     state.bgColor = btn.getAttribute('data-bg');
                     document.getElementById('input-bg-color').value = state.bgColor;
@@ -3579,16 +3612,26 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             if (canvas.height !== outH) canvas.height = outH;
             const ctx = canvas.getContext('2d');
 
-            // Background solid / gradasi
-            if (state.bgGradient) {
+            // Background foto / solid / gradasi
+            if (state.bgImage && state.bgImage.imgObj) {
+                const bgImg = state.bgImage.imgObj;
+                const k = Math.max(outW / bgImg.width, outH / bgImg.height);
+                const bw = bgImg.width * k, bh = bgImg.height * k;
+                ctx.drawImage(bgImg, (outW - bw) / 2, (outH - bh) / 2, bw, bh);
+                if (state.bgDim > 0) {
+                    ctx.fillStyle = `rgba(0, 0, 0, ${state.bgDim})`;
+                    ctx.fillRect(0, 0, outW, outH);
+                }
+            } else if (state.bgGradient) {
                 const grad = ctx.createLinearGradient(0, 0, outW, outH);
                 grad.addColorStop(0, state.bgGradient.c1);
                 grad.addColorStop(1, state.bgGradient.c2);
                 ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, outW, outH);
             } else {
                 ctx.fillStyle = state.bgColor;
+                ctx.fillRect(0, 0, outW, outH);
             }
-            ctx.fillRect(0, 0, outW, outH);
 
             const pad = state.padding * scaleFactor;
             const gap = state.gap * scaleFactor;
@@ -3929,6 +3972,63 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         window.addEventListener('DOMContentLoaded', initApp);
+// Toggle Hide / Show Panel Template Kiri
+        (function setupSidebarToggleAndBgPhoto() {
+            const btnToggle = document.getElementById('btn-toggle-sidebar');
+            const sidePanel = document.getElementById('side-panel');
+            const lbl = document.getElementById('toggle-sidebar-label');
+            if (btnToggle && sidePanel) {
+                btnToggle.addEventListener('click', () => {
+                    const hidden = sidePanel.classList.toggle('hidden');
+                    if (lbl) lbl.textContent = hidden ? 'Tampilkan Panel' : 'Sembunyikan Panel';
+                    setTimeout(() => {
+                        if (typeof resizeBoard === 'function') resizeBoard();
+                        renderCollage();
+                    }, 30);
+                });
+            }
+
+            const bgInput = document.getElementById('bg-photo-input');
+            const btnBgPhoto = document.getElementById('btn-bg-photo');
+            const btnBgClear = document.getElementById('btn-bg-clear');
+            const inputBgDim = document.getElementById('input-bg-dim');
+            const valBgDim = document.getElementById('val-bg-dim');
+
+            if (btnBgPhoto && bgInput) {
+                btnBgPhoto.addEventListener('click', () => bgInput.click());
+                bgInput.addEventListener('change', (e) => {
+                    const f = e.target.files[0];
+                    if (!f) return;
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            state.bgImage = { src: ev.target.result, imgObj: img };
+                            renderCollage();
+                            showToast('Foto background berhasil dipasang!');
+                        };
+                        img.src = ev.target.result;
+                    };
+                    reader.readAsDataURL(f);
+                    bgInput.value = '';
+                });
+            }
+            if (btnBgClear) {
+                btnBgClear.addEventListener('click', () => {
+                    state.bgImage = null;
+                    renderCollage();
+                    showToast('Foto background dihapus');
+                });
+            }
+            if (inputBgDim) {
+                inputBgDim.addEventListener('input', (e) => {
+                    state.bgDim = parseFloat(e.target.value) || 0;
+                    if (valBgDim) valBgDim.textContent = Math.round(state.bgDim * 100) + '%';
+                    renderCollage();
+                });
+            }
+        })();
+
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
             navigator.serviceWorker.register('sw.js').catch(() => {});
         }
