@@ -97,13 +97,13 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             color: var(--ac) !important;
         }
         /* Tombol Utama & Tab Aktif: Aksen Emas (#c9b27c) */
-        #btn-download, .tab-btn.active,
+        #btn-download, #slot-replace, .tab-btn.active,
         .bg-gradient-to-r.from-violet-600 {
             background: var(--ac) !important;
             color: #17201a !important;
             border-color: var(--ac) !important;
         }
-        #btn-download *, .tab-btn.active *, .bg-gradient-to-r.from-violet-600 * {
+        #btn-download *, #slot-replace *, .tab-btn.active *, .bg-gradient-to-r.from-violet-600 * {
             color: #17201a !important;
         }
         .tab-btn {
@@ -262,7 +262,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         <div class="flex items-center gap-1 sm:gap-2 shrink-0">
             <button id="btn-toggle-sidebar" title="Sembunyikan / Tampilkan Panel Template" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-100 text-xs sm:text-sm font-medium border border-white/10 transition active:scale-95">
                 <span id="toggle-sidebar-icon">◧</span>
-                <span id="toggle-sidebar-label" class="hidden md:inline">Sembunyikan Panel</span>
+                <span id="toggle-sidebar-label" class="hidden sm:inline">Panel</span>
             </button>
             <!-- Tombol Undo & Redo -->
             <div class="flex items-center bg-white/5 rounded-xl border border-white/10 p-0.5">
@@ -296,7 +296,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     <main class="flex-1 min-h-0 w-full flex flex-col lg:flex-row overflow-hidden">
         
         <!-- Panel Kontrol Kanan / Bawah (44% tinggi di HP Potret, 410px penuh di Laptop/Web) -->
-        <aside id="side-panel" class="h-[44%] lg:h-full w-full lg:w-[410px] min-h-0 bg-slate-900/85 backdrop-blur-2xl border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col shrink-0 shadow-2xl">
+        <aside id="side-panel" class="h-[42%] lg:h-full w-full lg:w-[410px] min-h-0 bg-slate-900/85 backdrop-blur-2xl border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col shrink-0 shadow-2xl">
             
             <!-- Navigasi Tab Pengaturan (5 TAB TERMASUK DOODLE ART) -->
             <div class="grid grid-cols-5 border-b border-white/10 p-1.5 gap-1 bg-slate-950/50 shrink-0">
@@ -1051,7 +1051,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         </aside>
 
         <!-- Area Kanvas Tengah (56% tinggi di HP Potret, fleksibel penuh di Laptop/Web) -->
-        <section class="h-[56%] lg:h-full lg:flex-1 min-h-0 min-w-0 flex flex-col canvas-workspace-bg relative overflow-hidden">
+        <section class="flex-1 lg:h-full min-h-0 min-w-0 flex flex-col canvas-workspace-bg relative overflow-hidden">
             
             <!-- Bilah Navigasi Carousel di Bagian Atas Kanvas -->
             <div class="w-full bg-slate-900/55 backdrop-blur-xl border-b border-white/10 px-3 sm:px-4 py-1.5 sm:py-2.5 flex items-center justify-between gap-2 z-20 shrink-0">
@@ -1101,8 +1101,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     </button>
                 </div>
 
+            </div>
                 <!-- Floating Toolbar saat Elemen Doodle / Teks Dipilih -->
-                <div id="doodle-toolbar" class="hidden absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 max-w-[96%] bg-slate-900/95 backdrop-blur-xl border border-amber-400/40 rounded-2xl px-3 py-1.5 sm:py-2 shadow-2xl flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 z-30 animate-toast">
+                <div id="doodle-toolbar" class="hidden w-full border-t border-white/10 px-2.5 py-2 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 z-30 shrink-0 max-h-[38%] overflow-y-auto">
                     <input type="text" id="doodle-text-edit" placeholder="Ketik teks..." class="hidden bg-slate-800 text-white text-xs rounded-xl px-2.5 py-1 border border-white/15 w-28 sm:w-36 focus:outline-none focus:border-amber-400">
                     <select id="doodle-font-edit" class="hidden bg-slate-800 text-white text-xs rounded-xl px-2 py-1 border border-white/15 focus:outline-none focus:border-amber-400">
                         <option value="Poppins">Poppins (Formal/Sekolah)</option>
@@ -1148,7 +1149,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 </div>
 
                 <!-- Floating Toolbar saat Slot Foto Dipilih -->
-                <div id="slot-toolbar" class="hidden absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 max-w-[96%] bg-slate-900/95 backdrop-blur-xl border border-white/15 rounded-2xl px-3 py-1.5 sm:py-2 shadow-2xl flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 z-30 animate-toast">
+                <div id="slot-toolbar" class="hidden w-full border-t border-white/10 px-2.5 py-2 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 z-30 shrink-0 max-h-[38%] overflow-y-auto">
                     <button id="slot-replace" class="flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white text-xs font-semibold transition shadow">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="image-plus" aria-hidden="true" class="lucide lucide-image-plus w-3.5 h-3.5"><path d="M16 5h6"></path><path d="M19 2v6"></path><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5"></path><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path><circle cx="9" cy="9" r="2"></circle></svg>
                         <span>Ganti</span>
@@ -1196,9 +1197,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         </div>
                     </div>
                 </div>
-            </div>
         </section>
-
 
     </main>
 
@@ -2457,6 +2456,15 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     renderLayoutThumbnails(filterCount);
                     renderCarouselUI();
                     renderCollage();
+                    if (window.innerWidth < 1024) {
+                        const sp = document.getElementById('side-panel');
+                        const lbl = document.getElementById('toggle-sidebar-label');
+                        if (sp && !sp.classList.contains('hidden')) {
+                            sp.classList.add('hidden');
+                            if (lbl) lbl.textContent = 'Panel';
+                            setTimeout(() => { if (typeof resizeBoard === 'function') resizeBoard(); renderCollage(); }, 30);
+                        }
+                    }
                 });
 
                 grid.appendChild(card);
@@ -2834,6 +2842,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             if (!item) return;
 
             doodleToolbar.classList.remove('hidden');
+            if (typeof resizeBoard === 'function') resizeBoard();
             syncDoodleToolbarValues(item);
             const textInput = document.getElementById('doodle-text-edit');
             const fontSelect = document.getElementById('doodle-font-edit');
@@ -2852,6 +2861,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         function deselectDoodle() {
             state.activeDoodleId = null;
             if (doodleToolbar) doodleToolbar.classList.add('hidden');
+            if (typeof resizeBoard === 'function') resizeBoard();
         }
 
         // =========================================================================
@@ -3346,6 +3356,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 return;
             }
             slotToolbar.classList.remove('hidden');
+            if (typeof resizeBoard === 'function') resizeBoard();
             const filterSel = document.getElementById('slot-filter');
             if (filterSel) filterSel.value = photo.filter || 'none';
             document.getElementById('slot-zoom-slider').value = photo.scale || 1;
@@ -3366,6 +3377,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         function deselectSlot() {
             state.activeSlotIndex = null;
             if (slotToolbar) slotToolbar.classList.add('hidden');
+            if (typeof resizeBoard === 'function') resizeBoard();
         }
 
         function syncStyleSliders() {
